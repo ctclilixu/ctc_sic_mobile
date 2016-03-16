@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC 
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" 
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+	<package name="doc" extends="struts-ge" namespace="/doc">
+	
+		<action name="showUploadDocAction" class="docAction" method="showUploadDocAction">
+			<result name="success">/page/doc/adddoc.jsp</result>
+		</action>
+		
+		<action name="uploadDocAction" class="docAction" method="uploadDocAction">
+			<result name="checkerror">/page/doc/adddoc.jsp</result>
+			<result name="success">/page/doc/adddocsucc.jsp</result>
+		</action>
+	
+		<action name="showDocManageAction" class="docAction" method="showDocManageAction">
+			<result name="success">/page/doc/doclist.jsp</result>
+		</action>
+		
+		<action name="queryDocAction" class="docAction" method="queryDocAction">
+			<result name="success">/page/doc/doclist.jsp</result>
+		</action>
+		
+		<action name="turnDocAction" class="docAction" method="turnDocAction">
+			<result name="success">/page/doc/doclist.jsp</result>
+		</action>
+		
+	</package>
+
+</struts>

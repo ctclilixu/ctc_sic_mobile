@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC 
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" 
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+	<package name="web" extends="struts-default, json-default" namespace="/web">
+	
+		<action name="showDocInfoAction" class="webDocInfoAction" method="showDocInfoAction">
+			<result name="checkerr">/page/web/nodocument.jsp</result>
+			<result name="success">/page/web/docinfo.jsp</result>
+		</action>
+		
+	</package>
+
+</struts>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig
+  PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+  "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+
+	<sqlMap resource="/config/ibatis/ge-user.xml" />
+	<sqlMap resource="/config/ibatis/ge-role.xml" />
+	<sqlMap resource="/config/ibatis/ge-resource.xml" />
+	<sqlMap resource="/config/ibatis/ge-customer.xml" />
+	<sqlMap resource="/config/ibatis/ge-doc.xml" />
+	
+</sqlMapConfig>

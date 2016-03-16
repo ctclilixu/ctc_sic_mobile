@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans>
+
+	<!-- doc -->
+	<bean id="docService" class="com.cn.ge.service.impl.DocServiceImpl" >
+		<property name="docDao">
+			<ref local="docDao"/>
+		</property>
+	</bean>
+	
+	<bean id="docDao" class="com.cn.ge.dao.impl.DocDaoImpl">
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient"/>
+		</property>
+	</bean>
+
+	<!-- coustomer -->
+	<bean id="customerService" class="com.cn.ge.service.impl.CustomerServiceImpl" >
+		<property name="customerDao">
+			<ref local="customerDao"/>
+		</property>
+	</bean>
+	
+	<bean id="customerDao" class="com.cn.ge.dao.impl.CustomerDaoImpl">
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient"/>
+		</property>
+	</bean>
+
+	<!-- resource -->
+	<bean id="resourceService" class="com.cn.ge.service.impl.ResourceServiceImpl" >
+		<property name="resourceDao">
+			<ref local="resourceDao"/>
+		</property>
+	</bean>
+	
+	<bean id="resourceDao" class="com.cn.ge.dao.impl.ResourceDaoImpl">
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient"/>
+		</property>
+	</bean>
+
+	<!-- 用户 -->
+	<bean id="userService" class="com.cn.ge.service.impl.UserServiceImpl" >
+		<property name="userDao">
+			<ref local="userDao"/>
+		</property>
+	</bean>
+	
+	<bean id="userDao" class="com.cn.ge.dao.impl.UserDaoImpl">
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient"/>
+		</property>
+	</bean>
+	
+	<!-- 角色 -->
+	<bean id="roleService" class="com.cn.ge.service.impl.RoleServiceImpl" >
+		<property name="roleDao">
+			<ref local="roleDao"/>
+		</property>
+	</bean>
+	
+	<bean id="roleDao" class="com.cn.ge.dao.impl.RoleDaoImpl">
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient"/>
+		</property>
+	</bean>
+</beans>

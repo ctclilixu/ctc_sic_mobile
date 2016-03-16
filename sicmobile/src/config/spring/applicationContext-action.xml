@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	
+	<!-- webdocinfo -->
+	<bean id="webDocInfoAction" class="com.cn.ge.action.WebDocInfoAction" scope="session">
+		<property name="docService">
+			<ref bean="docService"/>
+		</property>
+	</bean>
+	
+	<!-- doc -->
+	<bean id="docAction" class="com.cn.ge.action.DocAction" scope="session">
+		<property name="docService">
+			<ref bean="docService"/>
+		</property>
+	</bean>
+	
+	<!-- 登录 -->
+	<bean id="userLoginAction" class="com.cn.ge.action.UserLoginAction" scope="session">
+		<property name="userService">
+			<ref bean="userService"/>
+		</property>
+		<property name="roleService">
+			<ref bean="roleService"/>
+		</property>
+		<property name="resourceService">
+			<ref bean="resourceService"/>
+		</property>
+	</bean>
+	
+	<!-- frame -->
+	<bean id="frameAction" class="com.cn.ge.action.FrameAction" scope="session">
+	</bean>
+	
+	<!-- 验证码 -->
+	<bean id="randomActionBean" class="com.cn.ge.action.ValidateCodeAction" />
+	
+	<!-- 登录拦截器 -->
+	<bean id="loginInterceptorBean" class="com.cn.ge.interceptor.LoginInterceptor"/>
+	
+	<!-- 多语言拦截器 -->
+	<bean id="languageInterceptorBean" class="com.cn.ge.interceptor.LanguageInterceptor"/>
+	
+	<!-- frame拦截器 -->
+	<bean id="frameInterceptorBean" class="com.cn.ge.interceptor.FrameInterceptor"/>
+
+</beans>

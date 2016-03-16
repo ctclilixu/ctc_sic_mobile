@@ -1,0 +1,83 @@
+/* CSS Document by haohao*/
+
+body{font-family:Arial,Helvetica,sans-serif;font-size:12px;margin:0;padding:0;}
+h1,h2,h3,h4,h5,h6,form,img,ul,li,dl,dt,dd,p,div,span{margin:0;padding:0;border:0;}
+input{margin:0;padding:0;}
+li{list-style:none;list-style-type:none;}
+.del{white-space:nowrap;overflow:hidden;}
+.clear{clear:both;}
+.fl{float:left;}
+.fr{float:right;}
+.none{display:none;}
+.block{display:block;}
+/*处理文本框文字溢出问题，overflow可强制去掉多余部分的代码*/
+.wrap{word-wrap:break-word;overflow:hidden;}
+/*link*/
+a:link{color:#005a98;text-decoration:none}
+a:active{color:#005a98;text-decoration:none} 
+a:visited{color:#626f91;text-decoration:none}
+a:hover{color:#cf0010;text-decoration:underline}
+
+
+#dw1{ background-image: url(qmenu.png); position:relative;left:230px;top:12px;}
+#dw2{ background-image: url(qmenu.png); position:absolute;left:230px;top:12px;}
+
+/*通用元素*/
+.mgl30{margin-left:30px;}
+.mgr0{margin-right:0px;}
+.mgt30{margin-top:30px;}
+.mgt25{margin-top:25px;}
+.mgt10{margin-top:10px;}
+.mgb10{margin-bottom:10px;}
+.mgr10{margin-right:10px;}
+.mgl10{margin-left:10px;}
+.mgl5{margin-left:5px;}
+.mgr5{margin-right:5px;}
+.mgb5{margin-bottom:5px;}
+.mgt5{margin-top:5px;}
+.pdl10{padding-left:10px;}
+.pdt5{padding-top:5px;}
+.pdt2{padding-top:2px;}
+
+body{background:;}
+#container{width:94%;margin:0 auto;padding:0 20px;}
+.top{width:100%;float:left;height:auto;}
+.top img{float:right;}
+.product_code{float:left;font-weight:bold;font-size:24px;width:100%;word-spacing:-0.1em;}
+.product_code strong{float:right;}
+.product_code strong p{float:left;}
+
+
+.title1{float:left;width:100%;font-size:48px;font-weight:900;color:#0279C4;padding:20px 0 10px 20px;}
+.title2{float:left;width:98%;border-top:3px solid #000000;padding-top:20px;font-size:30px;color:#666666;font-style:italic;padding-left:20px;}
+
+.box2{width:98%;float:left; font-size:32px;padding-top:20px;padding-left:20px;}
+.box2 p{float:left;padding-bottom:20px;}
+
+.samebox{width:100%;float:left;padding-top:20px;}
+.samebox .title3{font-size:40px;width:100%;float:left;font-weight:600;padding-left:10px;}
+.samebox ul{width:96%;padding-left:40px;float:left;}
+.samebox ul li{width:98%;float:left;list-style:disc;padding-left:10px;padding-top:20px;font-size:32px}
+
+
+.box3{width:100%;float:left;padding-left:20px;margin-bottom:30px;padding-top:20px;}
+
+
+.box3 ul li{float:left; height:30%;width:auto;margin-right:20px;}
+
+
+.box3 ul li img{float:left;}
+
+
+.box4{width:80%;height:60px;margin-left:60px;-webkit-appearance: none;background:#0383C0;border:2px solid #045A83;float:left;text-align:center;-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;padding-top:20px;margin-bottom:30px;}
+.box4 a{font-size:36px;
+color:#FFFFFF;}
+.box4 a:link{color:#FFFFFF;}
+
+.box4 a:visited{color:#FFFFFF;}
+
+<!--结束index-->
+
+	

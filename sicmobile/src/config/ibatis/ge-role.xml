@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+        PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+        "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.cn.ge">
+
+	<resultMap id="RoleDto" class="com.cn.ge.dto.RoleDto">
+		<result property="id" column="id" />
+		<result property="rolecode" column="rolecode" />
+		<result property="rolename" column="rolename" />
+		<result property="note" column="note" />
+		<result property="status" column="status" />
+		<result property="createuser" column="createuser" />
+		<result property="createdate" column="createdate" />
+		<result property="updateuser" column="updateuser" />
+		<result property="updatedate" column="updatedate" />
+	</resultMap>
+	
+	<select id="queryRoleCountByPage" resultClass="int" parameterClass="java.util.Map">
+		select count(*) from tbrole T where 1 = 1
+			<isNotEmpty prepend="and" property="rolename">
+				T.rolename like '%$rolename$%' ESCAPE '/'
+			</isNotEmpty>
+	</select>
+	
+	<select id="queryRoleByPage" parameterClass="java.util.Map" resultMap="RoleDto">
+		select T.* from tbrole T where 1 = 1
+		<isNotEmpty prepend="and" property="rolename">
+			T.rolename like '%$rolename$%' ESCAPE '/'
+		</isNotEmpty>
+		order by T.updatedate desc
+		LIMIT #start#, #end#
+	</select>
+	
+	<select id="queryRoleByID" parameterClass="java.util.Map" resultMap="RoleDto">
+		select * from tbrole where 
+			id = #id#
+	</select>
+	
+	<select id="queryRoleByCode" parameterClass="java.util.Map" resultMap="RoleDto">
+		select * from tbrole where 
+			rolecode = #rolecode#
+	</select>
+	
+	<select id="queryAllRole" parameterClass="java.util.Map" resultMap="RoleDto">
+		select * from tbrole where 1 = 1 and status = 1 order by createdate desc
+	</select>
+	
+	<delete id="deleteRole" parameterClass="java.util.Map">
+		delete from tbrole where id = #id#
+	</delete>
+	
+	<insert id="insertRole" parameterClass="com.cn.ge.dto.RoleDto">
+		insert into tbrole(rolecode,rolename,note,status,createuser,createdate,updateuser,updatedate)
+		values(#rolecode#,#rolename#,#note#,#status#,#createuser#,NOW(),#updateuser#,NOW())
+	</insert>
+	
+	<update id="updateRole" parameterClass="com.cn.ge.dto.RoleDto">
+		update tbrole
+		set rolename = #rolename#,
+			rolecode = #rolecode#,
+			note = #note#,
+			status = #status#,
+			updateuser = #updateuser#,
+			updatedate = NOW()
+		where id = #id#
+	</update>
+	
+</sqlMap>
