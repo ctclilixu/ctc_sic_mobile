@@ -36,7 +36,9 @@ public class WebDocInfoAction extends BaseAction {
 			if(StringUtil.isBlank(strDocId)) {
 				return "checkerr";
 			}
-			docInfoDto = docService.queryDocByID(strDocId);
+			//docInfoDto = docService.queryDocByID(strDocId);
+			//默认查询概要版数据----以后会做修改
+			docInfoDto = docService.queryDocByLogicID(strDocId, "10");
 			if(docInfoDto == null) {
 				return "checkerr";
 			}

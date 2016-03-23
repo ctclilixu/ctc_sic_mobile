@@ -7,6 +7,7 @@
 	<resultMap id="DocDto" class="com.cn.ge.dto.DocDto">
 		<result property="id" column="id" />
 		<result property="docname" column="docname" />
+		<result property="filename" column="filename" />
 		<result property="doctype" column="doctype" />
 		<result property="showtype" column="showtype" />
 		<result property="productcode" column="productcode" />
@@ -71,16 +72,20 @@
 			id = #id#
 	</select>
 	
+	<select id="queryDocByLogicID" parameterClass="java.util.Map" resultMap="DocDto">
+		select * from tbdoc where docname = #docname# and doctype = #doctype#
+	</select>
+	
 	<delete id="deleteDoc" parameterClass="java.util.Map">
 		delete from tbdoc where id = #id#
 	</delete>
 	
 	<insert id="insertDoc" parameterClass="com.cn.ge.dto.DocDto">
-		insert into tbdoc(docname,doctype,showtype,productcode,subtitle,title1,content1,title2,content2,title3,content3,
+		insert into tbdoc(docname,filename,doctype,showtype,productcode,subtitle,title1,content1,title2,content2,title3,content3,
 			title4,content4,title5,content5,picture1,picture2,picture3,picture4,picture5,
 			picture6,picture7,picture8,picture9,picture10,qrcode,res01,res02,res03,res04,
 			res05,res06,res07,res08,res09,res10,note,status,createuser,createdate,updateuser,updatedate)
-		values(#docname#,#doctype#,#showtype#,#productcode#,#subtitle#,#title1#,#content1#,#title2#,#content2#,#title3#,#content3#,
+		values(#docname#,#filename#,#doctype#,#showtype#,#productcode#,#subtitle#,#title1#,#content1#,#title2#,#content2#,#title3#,#content3#,
 			#title4#,#content4#,#title5#,#content5#,#picture1#,#picture2#,#picture3#,#picture4#,#picture5#,
 			#picture6#,#picture7#,#picture8#,#picture9#,#picture10#,#qrcode#,#res01#,#res02#,#res03#,#res04#,
 			#res05#,#res06#,#res07#,#res08#,#res09#,#res10#,#note#,#status#,#createuser#,NOW(),#updateuser#,NOW())
@@ -92,6 +97,7 @@
 	<update id="updateDoc" parameterClass="com.cn.ge.dto.DocDto">
 		update tbdoc
 		set docname = #docname#,
+			filename = #filename#,
 			doctype = #doctype#,
 			showtype = #showtype#,
 			productcode = #productcode#,

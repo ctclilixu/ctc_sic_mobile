@@ -1,6 +1,13 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>  
+<?xml version="1.0" encoding="UTF-8"?>  
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 <beans>
+	
+	<!-- webapply -->
+	<bean id="webApplyAction" class="com.cn.ge.action.WebApplyAction" scope="session">
+		<property name="customerService">
+			<ref bean="customerService"/>
+		</property>
+	</bean>
 	
 	<!-- webdocinfo -->
 	<bean id="webDocInfoAction" class="com.cn.ge.action.WebDocInfoAction" scope="session">
@@ -13,6 +20,23 @@
 	<bean id="docAction" class="com.cn.ge.action.DocAction" scope="session">
 		<property name="docService">
 			<ref bean="docService"/>
+		</property>
+	</bean>
+	
+	<!-- 客户 -->
+	<bean id="customerAction" class="com.cn.ge.action.CustomerAction" scope="session">
+		<property name="customerService">
+			<ref bean="customerService"/>
+		</property>
+	</bean>
+	
+	<!-- 用户 -->
+	<bean id="userAction" class="com.cn.ge.action.UserAction" scope="session">
+		<property name="userService">
+			<ref bean="userService"/>
+		</property>
+		<property name="roleService">
+			<ref bean="roleService"/>
 		</property>
 	</bean>
 	

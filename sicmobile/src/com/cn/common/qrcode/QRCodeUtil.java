@@ -26,6 +26,7 @@ import com.swetake.util.Qrcode;
 public class QRCodeUtil {
 	
 	private static int size = 10;
+	public static String imgType = "bmp";
 
 	/**
 	 * 生成二维码

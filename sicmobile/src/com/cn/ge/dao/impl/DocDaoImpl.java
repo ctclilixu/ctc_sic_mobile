@@ -45,6 +45,19 @@ public class DocDaoImpl extends BaseDao implements DocDao {
 		}
 		return null;
 	}
+	
+	@Override
+	public DocDto queryDocByLogicID(String docname, String doctype) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("docname", docname);
+		paramMap.put("doctype", doctype);
+		@SuppressWarnings("unchecked")
+		List<DocDto> list = getSqlMapClientTemplate().queryForList("queryDocByLogicID", paramMap);
+		if(list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
 
 	@Override
 	public void deleteDoc(String id) {

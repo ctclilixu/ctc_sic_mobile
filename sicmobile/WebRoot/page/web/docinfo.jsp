@@ -19,9 +19,11 @@
 	<div class="top">
 		<img src="<%=request.getContextPath()%>/page/web//image/ge.png" />
 	</div>
-	<div class="product_code">
-		<strong><p>Product Code&nbsp;</p><p><s:property value="docInfoDto.productcode"/></p></strong>
-	</div>
+	<s:if test="%{docInfoDto.showtype != 2}">
+		<div class="product_code">
+			<strong><p>Product Code&nbsp;</p><p><s:property value="docInfoDto.productcode"/></p></strong>
+		</div>
+	</s:if>
 	<div class="box1">
 		<div class="title1">
 			<p><s:property value="docInfoDto.title1"/></p>
@@ -35,30 +37,86 @@
 			<p><s:property /></p>
 		</s:iterator>
 	</div>
-	<div class="samebox">
-		<div class="title3">Features</div>
-		<ul>
-			<s:iterator id="content2List" value="docInfoDto.content2List" status="st1">
-				<li><s:property /></li>
-			</s:iterator>
-		</ul>
-	</div>
-	<div class="samebox">
-		<div class="title3">Benefits</div>
-		<ul>
-			<s:iterator id="content3List" value="docInfoDto.content3List" status="st1">
-				<li><s:property /></li>
-			</s:iterator>
-		</ul>
-	</div>
-	<div class="samebox">
-		<div class="title3">Applications</div>
-		<ul>
-			<s:iterator id="content4List" value="docInfoDto.content4List" status="st1">
-				<li><s:property /></li>
-			</s:iterator>
-		</ul>
-	</div>
+	<s:if test='%{docInfoDto.title2 != null && docInfoDto.title2 != ""}'>
+		<s:if test="%{docInfoDto.showtype == 2}">
+			<div class="samebox">
+				<div class="title3"><s:property value="docInfoDto.title2"/></div>
+			</div>
+			<div class="box2">
+				<p><s:property value="docInfoDto.content2"/></p>
+			</div>
+		</s:if>
+		<s:else>
+			<div class="samebox">
+				<div class="title3"><s:property value="docInfoDto.title2"/></div>
+				<ul>
+					<s:iterator id="content2List" value="docInfoDto.content2List" status="st1">
+						<li><s:property /></li>
+					</s:iterator>
+				</ul>
+			</div>
+		</s:else>
+	</s:if>
+	<s:if test='%{docInfoDto.title3 != null && docInfoDto.title3 != ""}'>
+		<s:if test="%{docInfoDto.showtype == 2}">
+			<div class="samebox">
+				<div class="title3"><s:property value="docInfoDto.title3"/></div>
+			</div>
+			<div class="box2">
+				<p><s:property value="docInfoDto.content3"/></p>
+			</div>
+		</s:if>
+		<s:else>
+			<div class="samebox">
+				<div class="title3"><s:property value="docInfoDto.title3"/></div>
+				<ul>
+					<s:iterator id="content3List" value="docInfoDto.content3List" status="st1">
+						<li><s:property /></li>
+					</s:iterator>
+				</ul>
+			</div>
+		</s:else>
+	</s:if>
+	<s:if test='%{docInfoDto.title4 != null && docInfoDto.title4 != ""}'>
+		<s:if test="%{docInfoDto.showtype == 2}">
+			<div class="samebox">
+				<div class="title3"><s:property value="docInfoDto.title4"/></div>
+			</div>
+			<div class="box2">
+				<p><s:property value="docInfoDto.content4"/></p>
+			</div>
+		</s:if>
+		<s:else>
+			<div class="samebox">
+				<div class="title3"><s:property value="docInfoDto.title4"/></div>
+				<ul>
+					<s:iterator id="content4List" value="docInfoDto.content4List" status="st1">
+						<li><s:property /></li>
+					</s:iterator>
+				</ul>
+			</div>
+		</s:else>
+	</s:if>
+	<s:if test='%{docInfoDto.title5 != null && docInfoDto.title5 != ""}'>
+		<s:if test="%{docInfoDto.showtype == 2}">
+			<div class="samebox">
+				<div class="title3"><s:property value="docInfoDto.title5"/></div>
+			</div>
+			<div class="box2">
+				<p><s:property value="docInfoDto.content5"/></p>
+			</div>
+		</s:if>
+		<s:else>
+			<div class="samebox">
+				<div class="title3"><s:property value="docInfoDto.title5"/></div>
+				<ul>
+					<s:iterator id="content5List" value="docInfoDto.content5List" status="st1">
+						<li><s:property /></li>
+					</s:iterator>
+				</ul>
+			</div>
+		</s:else>
+	</s:if>
 	<div class="box3">
 		<ul>
 			<s:iterator id="pictureList" value="docInfoDto.pictureList" status="st1">

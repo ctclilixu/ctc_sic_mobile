@@ -24,6 +24,34 @@ ul,li{ list-style:none;}
 	
 	//验证数据格式
 	function checkItem() {
+		var docname = $("#docname").val();
+		var doctype = $("#doctype").val();
+		if(docname == "") {
+			alert("文档名不能为空！");
+			$("#docname").focus();
+			return false;
+		}
+		if(docname.indexOf(" ") >= 0) {
+			alert("文档名不能包含空格！");
+			$("#docname").focus();
+			return false;
+		}
+		if(checkString(docname)) {
+			alert("文档名不能包含特殊字符！");
+			$("#docname").focus();
+			return false;
+		}
+		if(doctype == "") {
+			alert("请选择文档类型！");
+			$("#doctype").focus();
+			return false;
+		}
+		
+		if($("#addPdfFile").val() == "") {
+			alert("请选择PDF文件！");
+			return false;
+		}
+		
 		if($("#addPdfFile").val() == "") {
 			alert("请选择PDF文件！");
 			return false;
@@ -46,20 +74,35 @@ ul,li{ list-style:none;}
 				<s:hidden name="filename" id="filename"></s:hidden>
 				<table width="100%" style="height:100%;" border="0" cellpadding="5" cellspacing="0">
 					<tr style="height: 120px;">
-						<td style="color:red; vertical-align: bottom;" align="center"><s:actionmessage /></td>
+						<td colspan="2" style="color:red; vertical-align: bottom;" align="center"><s:actionmessage /></td>
 					</tr>
 					<tr>
-						<td align="center">
+						<td colspan="2" align="center">
 							<font style="font-size: 20px;">请上传新的PDF文档，并生成二维码供使用！</font>
 						</td>
 					</tr>
-					<tr style="height: 70px;">
-						<td align="center">
-							<font style="font-size: 20px; vertical-align: bottom;">上传文档：</font><input name="addPdfFile" id="addPdfFile" type="file" style="height: 25px;" size="60"/>
+					<tr style="height: 40px;">
+						<td width="38%" align="right"><font style="font-size: 20px;">文档名：</font></td>
+						<td align="left">
+							<s:textfield name="docname" id="docname" cssStyle="width:300px;" maxlength="64" theme="simple"></s:textfield>（唯一标识）
+						</td>
+					</tr>
+					<tr style="height: 40px;">
+						<td align="right"><font style="font-size: 20px;">文档类型：</font></td>
+						<td align="left">
+							<select name="doctype" id="doctype" style="width:300px;">
+								<option value="10" selected="selected">概要版</option>
+							</select>
+						</td>
+					</tr>
+					<tr style="height: 40px;">
+						<td align="right"><font style="font-size: 20px;">上传文档：</font></td>
+						<td align="left">
+							<font style="font-size: 20px; vertical-align: bottom;"></font><input name="addPdfFile" id="addPdfFile" type="file" style="height: 25px;" size="60"/>
 						</td>
 					</tr>
 					<tr>
-						<td align="center">
+						<td align="center" colspan="2">
 							<input class="input80" style="text-align: center; width: 90px;" type="button" value="上传" onclick="add();"/>
 						</td>
 					</tr>

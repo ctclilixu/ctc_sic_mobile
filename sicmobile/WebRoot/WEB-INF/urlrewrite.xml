@@ -5,7 +5,7 @@
 <urlrewrite>
 
 	<rule>
-		<from>^/docinfo_id([0-9]+).shtml$</from>
+		<from>^/docinfo_id([^/_]*?).shtml$</from>
 		<to>/web/showDocInfoAction.action\?strDocId=$1</to>
 	</rule>
 	
@@ -30,7 +30,7 @@
 	</outbound-rule>
 	
 	<outbound-rule>
-		<from>/web/showDocInfoAction.action\?strDocId=([0-9]+)</from>
+		<from>/web/showDocInfoAction.action\?strDocId=([^/_]*?)</from>
 		<to>/docinfo_id$1.shtml</to>
 	</outbound-rule>
 	

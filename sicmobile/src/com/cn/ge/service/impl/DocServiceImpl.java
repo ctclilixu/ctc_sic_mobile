@@ -40,6 +40,11 @@ public class DocServiceImpl implements DocService {
 	public DocDto queryDocByID(String id) {
 		return docDao.queryDocByID(id);
 	}
+	
+	@Override
+	public DocDto queryDocByLogicID(String docname, String doctype) {
+		return docDao.queryDocByLogicID(docname, doctype);
+	}
 
 	@Override
 	public void deleteDoc(String id) {

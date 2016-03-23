@@ -115,12 +115,13 @@
 							<tr class="tittle">
 								<td width="5%"></td>
 								<td width="5%">序号</td>
-								<td width="30%">PDF文件名</td>
-								<td width="10%">文件类型</td>
-								<td width="10%">状态</td>
-								<td width="10%">创建者</td>
+								<td width="15%">文件名</td>
+								<td width="30%">上传PDF文件名</td>
+								<td width="8%">文件类型</td>
+								<td width="6%">状态</td>
+								<td width="6%">创建者</td>
 								<td width="15%">创建时间</td>
-								<td width="15%">操作</td>
+								<td width="10%">操作</td>
 							</tr>
 							<s:iterator id="docList" value="docList" status="st1">
 								<s:if test="#st1.odd==true">
@@ -134,6 +135,11 @@
 									<td>
 										<div noWrap style="text-overflow:ellipsis;overflow:hidden">
 											<s:property value="docname"/>
+										</div>
+									</td>
+									<td>
+										<div noWrap style="text-overflow:ellipsis;overflow:hidden">
+											<s:property value="filename"/>
 										</div>
 									</td>
 									<td>
@@ -157,7 +163,7 @@
 									</td>
 									<td><s:property value="createdate"/></td>
 									<td>
-										<input type="button" value="查看二维码"/>
+										<a href="../doc/downloadPic.action?downloadPicId=<s:property value="id"/>" target="_self">二维码下载</a>
 									</td>
 								</tr>
 							</s:iterator>

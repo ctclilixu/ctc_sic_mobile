@@ -36,6 +36,14 @@ public interface DocDao {
 	public DocDto queryDocByID(String id);
 	
 	/**
+	 * 根据逻辑主键查询数据
+	 * @param docname
+	 * @param doctype
+	 * @return
+	 */
+	public DocDto queryDocByLogicID(String docname, String doctype);
+	
+	/**
 	 * 删除资料信息
 	 * @param id
 	 */

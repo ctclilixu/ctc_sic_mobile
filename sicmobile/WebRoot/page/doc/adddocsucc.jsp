@@ -31,7 +31,7 @@ ul,li{ list-style:none;}
 					</tr>
 					<tr style="height: 70px;">
 						<td align="center">
-							<font style="font-size: 16px;">需查看刚上传的文档，请去<a href="../doc/showDocManageAction.action">PDF资料管理</a>查看</font>
+							<font style="font-size: 16px;">需查看刚上传的文档，请去<a href="../doc/showDocManageAction.action">PDF资料管理</a>查看。<a href="../doc/showUploadDocAction.action">继续上传</a></font>
 						</td>
 					</tr>
 					<tr>
@@ -41,7 +41,7 @@ ul,li{ list-style:none;}
 					</tr>
 					<tr>
 						<td align="center">
-							<a href="#">下载到本地</a>
+							<a href="../doc/downloadPic.action?downloadPicId=<s:property value="downloadPicId"/>" target="_self">下载到本地</a>
 						</td>
 					</tr>
 				</table>

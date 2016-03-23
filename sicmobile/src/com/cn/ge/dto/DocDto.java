@@ -22,14 +22,19 @@ public class DocDto extends BaseDto {
 	private Integer id;
 
 	/**
-	 * 资料名
+	 * 资料文件名
 	 */
 	private String docname;
+	
+	/**
+	 * 上传的文件名
+	 */
+	private String filename;
 
 	/**
-	 * 类型：10普通文档，20特殊文档，默认为10
+	 * 类型：10概要版，20完整版，默认为10
 	 */
-	private Integer doctype;
+	private String doctype;
 	
 	/**
 	 * 类型：1为标准格式，2为特殊格式
@@ -252,10 +257,6 @@ public class DocDto extends BaseDto {
 		return docname;
 	}
 
-	public Integer getDoctype() {
-		return doctype;
-	}
-
 	public String getTitle1() {
 		return title1;
 	}
@@ -390,10 +391,6 @@ public class DocDto extends BaseDto {
 
 	public void setDocname(String docname) {
 		this.docname = docname;
-	}
-
-	public void setDoctype(Integer doctype) {
-		this.doctype = doctype;
 	}
 
 	public void setTitle1(String title1) {
@@ -700,5 +697,21 @@ public class DocDto extends BaseDto {
 
 	public void setShowtype(Integer showtype) {
 		this.showtype = showtype;
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public String getDoctype() {
+		return doctype;
+	}
+
+	public void setDoctype(String doctype) {
+		this.doctype = doctype;
 	}
 }

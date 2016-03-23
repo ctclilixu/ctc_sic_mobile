@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC 
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" 
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+	<package name="customer" extends="struts-ge" namespace="/customer">
+	
+		<action name="showCustomerManageAction" class="customerAction" method="showCustomerManageAction">
+			<result name="success">/page/customer/customerlist.jsp</result>
+		</action>
+		
+		<action name="queryCustomerAction" class="customerAction" method="queryCustomerAction">
+			<result name="success">/page/customer/customerlist.jsp</result>
+		</action>
+		
+		<action name="turnCustomerAction" class="customerAction" method="turnCustomerAction">
+			<result name="success">/page/customer/customerlist.jsp</result>
+		</action>
+		
+	</package>
+
+</struts>

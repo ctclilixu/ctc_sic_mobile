@@ -1,4 +1,4 @@
-﻿/*
+/*
 SQLyog 企业版 - MySQL GUI v8.14 
 MySQL - 5.1.51-community : Database - ge
 *********************************************************************
@@ -46,7 +46,7 @@ CREATE TABLE `tbcustomer` (
   `updateuser` varchar(32) DEFAULT NULL COMMENT '更新者',
   `updatedate` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
 /*Data for the table `tbcustomer` */
 
@@ -56,7 +56,8 @@ DROP TABLE IF EXISTS `tbdoc`;
 
 CREATE TABLE `tbdoc` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '资料ID',
-  `docname` varchar(128) NOT NULL COMMENT '资料名',
+  `docname` varchar(64) NOT NULL COMMENT '资料名，手动输入，和doctype组成逻辑主键',
+  `filename` varchar(128) DEFAULT NULL COMMENT '上传文件名',
   `doctype` int(4) NOT NULL COMMENT '类型：10普通文档，20特殊文档，默认为10',
   `showtype` int(4) DEFAULT NULL COMMENT '类型：1为标准格式，2为特殊格式',
   `productcode` varchar(50) DEFAULT NULL COMMENT 'productcode',
@@ -99,7 +100,7 @@ CREATE TABLE `tbdoc` (
   `updateuser` varchar(32) DEFAULT NULL COMMENT '更新者',
   `updatedate` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
 /*Data for the table `tbdoc` */
 

@@ -1,8 +1,14 @@
 package com.cn.ge.action;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -13,6 +19,7 @@ import com.cn.common.util.Constants;
 import com.cn.common.util.Page;
 import com.cn.common.util.PdfUtil;
 import com.cn.common.util.PropertiesConfig;
+import com.cn.common.util.StringUtil;
 import com.cn.ge.dto.DocDto;
 import com.cn.ge.service.DocService;
 import com.opensymphony.xwork2.ActionContext;
@@ -47,7 +54,44 @@ public class DocAction extends BaseAction {
 	//文件上传
 	private File addPdfFile;
 	private String filename;
+	private String docname;
+	private String doctype;
 	private String qr_url;
+	
+	//图片下载
+	private String downloadPicId;
+	
+	/**
+	 * 下载二维码Action
+	 */
+	public void downloadPic() {
+		try {
+			this.clearMessages();
+			//图片地址
+			String qrPicPath = PropertiesConfig.getPropertiesValueByKey("PIC_PATH") + downloadPicId + "\\qrcode_" + downloadPicId + "." + QRCodeUtil.imgType;
+			
+			response.setHeader("Content-Disposition", "attachment; filename=" + "qrcode_" + downloadPicId + "." + QRCodeUtil.imgType);
+			OutputStream outStream = response.getOutputStream();
+			response.setContentType("image/jped");
+			
+			File f = new File(qrPicPath);
+			BufferedImage bi;
+			byte[] bytes = null;
+			try {
+				bi = ImageIO.read(f);
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ImageIO.write(bi, "jpg", baos);
+				bytes = baos.toByteArray();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			outStream.write(bytes, 0, bytes.length);
+			outStream.flush();
+			outStream.close();
+		} catch(Exception e) {
+			log.error("downloadPic error:" + e);
+		}
+	}
 	
 	/**
 	 * 显示文件上传页面
@@ -58,7 +102,9 @@ public class DocAction extends BaseAction {
 			this.clearMessages();
 			addPdfFile = null;
 			filename = "";
+			docname = "";
 			qr_url = "";
+			downloadPicId= "";
 		} catch(Exception e) {
 			log.error("showUploadDocAction error:" + e);
 			return ERROR;
@@ -76,6 +122,17 @@ public class DocAction extends BaseAction {
 			qr_url = "";
 			if(addPdfFile == null) {
 				this.addActionMessage("请选择PDF文件！");
+				return "checkerror";
+			}
+
+			//判断逻辑主键
+			DocDto tmpdoc = docService.queryDocByLogicID(docname, doctype);
+			if(tmpdoc != null) {
+				if("20".equals(doctype)) {
+					this.addActionMessage("该文档名对应的完整版已存在！");
+				} else {
+					this.addActionMessage("该文档名对应的概要版已存在！");
+				}
 				return "checkerror";
 			}
 			
@@ -102,9 +159,14 @@ public class DocAction extends BaseAction {
 			String userid = (String) ActionContext.getContext().getSession().get(Constants.SESSION_USER_ID);
 			
 			DocDto newdoc = new DocDto();
-			newdoc.setDocname(filename);
+			
+			//资料名，手动输入，与doctype组成逻辑主键
+			newdoc.setDocname(docname);
+			
+			//上传的PDF文件名
+			newdoc.setFilename(filename);
 			//普通文档
-			newdoc.setDoctype(10);
+			newdoc.setDoctype(doctype);
 			
 			//解析PDF文件
 			//String txt = PdfUtil.getTextFromPdf(targetPath + newfilename + s);
@@ -137,8 +199,9 @@ public class DocAction extends BaseAction {
 					if("Features".equals(s1[i])) {
 						break;
 					}
-					desc += s1[i] + "\r\n";
+					desc += s1[i] + " ";
 				}
+				desc = desc.replace("  ", " ");
 				
 				//Product Code
 				if(text.indexOf("Product Code") >= 0) {
@@ -148,76 +211,29 @@ public class DocAction extends BaseAction {
 				}
 				
 				//Features
-				if(text.indexOf("Features") >= 0) {
-					String s[] = text.split("Features");
-					String ss[] = s[1].split("\r\n");
-					int i = 0;
-					for(String sss : ss) {
-						if(!"".equals(sss.trim())) {
-							if(!sss.startsWith("• ") && !sss.startsWith("? ")) {
-								if(PdfUtil.gePdfTextKeyCheck("Features", sss, i)) {
-									break;
-								} else {
-									features += sss.replace("• ", "").replace("? ", "") + "\r\n";
-								}
-							} else {
-								features += sss.replace("• ", "").replace("? ", "") + "\r\n";
-							}
-						}
-						i++;
-					}
-				}
-				
+				features = PdfUtil.getContentByKeyword(text, "Features", true);
 				//Benefits
-				if(text.indexOf("Benefits") >= 0) {
-					String s[] = text.split("Benefits");
-					String ss[] = s[1].split("\r\n");
-					int i = 0;
-					for(String sss : ss) {
-						if(!"".equals(sss.trim())) {
-							if(!sss.startsWith("• ") && !sss.startsWith("? ")) {
-								if(PdfUtil.gePdfTextKeyCheck("Benefits", sss, i)) {
-									break;
-								} else {
-									benefits += sss.replace("• ", "").replace("? ", "") + "\r\n";
-								}
-							} else {
-								benefits += sss.replace("• ", "").replace("? ", "") + "\r\n";
-							}
-						}
-						i++;
-					}
-				}
-				
+				benefits = PdfUtil.getContentByKeyword(text, "Benefits", true);
 				//Applications
-				if(text.indexOf("Applications") >= 0) {
-					String s[] = text.split("Applications");
-					String ss[] = s[1].split("\r\n");
-					for(String sss : ss) {
-						if(!"".equals(sss.trim())) {
-							if(!sss.startsWith("• ") && !sss.startsWith("? ")) {
-								break;
-							} else {
-								applications += sss.replace("• ", "").replace("? ", "") + "\r\n";
-							}
-						}
-					}
-				}
+				applications = PdfUtil.getContentByKeyword(text, "Applications", false);
 				
 				//productcode
 				newdoc.setProductcode(productcode);
-				
 				//Features
-				newdoc.setTitle2("Features");
-				newdoc.setContent2(features);
-				
+				if(StringUtil.isNotBlank(features)) {
+					newdoc.setTitle2("Features");
+					newdoc.setContent2(features);
+				}
 				//Benefits
-				newdoc.setTitle3("Benefits");
-				newdoc.setContent3(benefits);
-				
+				if(StringUtil.isNotBlank(benefits)) {
+					newdoc.setTitle3("Benefits");
+					newdoc.setContent3(benefits);
+				}
 				//Applications
-				newdoc.setTitle4("Applications");
-				newdoc.setContent4(applications);
+				if(StringUtil.isNotBlank(applications)) {
+					newdoc.setTitle4("Applications");
+					newdoc.setContent4(applications);
+				}
 				
 				log.info("productcode=[" + productcode + "]");
 				log.info("features=[" + features + "]");
@@ -226,6 +242,11 @@ public class DocAction extends BaseAction {
 			} else {
 				//其他格式
 				newdoc.setShowtype(2);
+				
+				String lowInductanceModules = "Low-inductance modules  \r\nwith Intelligent Gate Drive";
+				String controlsProtection = "Controls and Protection";
+				String sicUserInterface = "SiC User Interface ";
+				String powerCapabilityEfficiency = "Power Capability and Efficiency";
 				//文件描述
 				String tmp = text.replace(subtitle, "");
 				tmp = tmp.replace("fact sheet", "");
@@ -237,19 +258,55 @@ public class DocAction extends BaseAction {
 					if("Low-inductance modules".equals(s2[i].trim())) {
 						break;
 					}
-					desc += s2[i] + "\r\n";
+					desc += s2[i] + " ";
 				}
+				desc = desc.replace("  ", " ");
+				
+				//Low-inductance modules
+				//with Intelligent Gate Drive
+				lowInductanceModules = PdfUtil.getContentByIndex(text, "Low-inductance modules  \r\nwith Intelligent Gate Drive", "Controls and Protection");
+				//Controls and Protection
+				controlsProtection = PdfUtil.getContentByIndex(text, "Controls and Protection", "SiC User Interface");
+				//SiC User Interface
+				sicUserInterface = PdfUtil.getContentByIndex(text, "SiC User Interface ", "fact sheet");
+				//Power Capability and Efficiency
+				powerCapabilityEfficiency = PdfUtil.getContentByIndex(text, "Power Capability and Efficiency", "www.GESiliconCarbide.com");
+				
+				//Low-inductance modules
+				//with Intelligent Gate Drive
+				if(StringUtil.isNotBlank(lowInductanceModules)) {
+					newdoc.setTitle2("Low-inductance modules  \r\nwith Intelligent Gate Drive");
+					newdoc.setContent2(lowInductanceModules);
+				}
+				//Controls and Protection
+				if(StringUtil.isNotBlank(controlsProtection)) {
+					newdoc.setTitle3("Controls and Protection");
+					newdoc.setContent3(controlsProtection);
+				}
+				//SiC User Interface 
+				if(StringUtil.isNotBlank(sicUserInterface)) {
+					newdoc.setTitle4("SiC User Interface ");
+					newdoc.setContent4(sicUserInterface);
+				}
+				//Power Capability and Efficiency
+				if(StringUtil.isNotBlank(powerCapabilityEfficiency)) {
+					newdoc.setTitle5("Power Capability and Efficiency");
+					newdoc.setContent5(powerCapabilityEfficiency);
+				}
+				
+				log.info("lowInductanceModules=[" + lowInductanceModules + "]");
+				log.info("controlsProtection=[" + controlsProtection + "]");
+				log.info("sicUserInterface=[" + sicUserInterface + "]");
+				log.info("powerCapabilityEfficiency=[" + powerCapabilityEfficiency + "]");
 			}
-			log.info("title=[" + title + "]");
 			log.info("desc=[" + desc + "]");
+			log.info("title=[" + title + "]");
 			log.info("subtitle=[" + subtitle + "]");
-			//log.info(text);
-			
+				
 			//大标题
 			newdoc.setTitle1(title);
 			//资料描述
 			newdoc.setContent1(desc);
-			
 			//副标题
 			newdoc.setSubtitle(subtitle);
 			
@@ -257,6 +314,12 @@ public class DocAction extends BaseAction {
 			newdoc.setCreateuser(userid);
 			newdoc.setUpdateuser(userid);
 			docService.insertDoc(newdoc);
+			
+			//判断文件夹目录是否存在
+			File pic_path = new File(PropertiesConfig.getPropertiesValueByKey("PIC_PATH"));
+			if(!pic_path.exists()) {
+				pic_path.mkdir();
+			}
 			
 			//PDF图片
 			List<String> piclist = PdfUtil.getPicFromPdf(addPdfFile, "" + newdoc.getId(),
@@ -281,11 +344,11 @@ public class DocAction extends BaseAction {
 			
 			//生成二维码qrcode
 			QRCodeUtil handler = new QRCodeUtil();
-			String imgType = "bmp";
 			//二维码图片保存路径
-			String qrPicPath = PropertiesConfig.getPropertiesValueByKey("PIC_PATH") + newdoc.getId() + "\\qrcode_" + newdoc.getId() + "." + imgType;
+			String qrPicPath = PropertiesConfig.getPropertiesValueByKey("PIC_PATH") + newdoc.getId() + "\\qrcode_" + newdoc.getId() + "." + QRCodeUtil.imgType;
 			//二维码内容=资料明细路径
-			String content = PropertiesConfig.getPropertiesValueByKey("DOMAIN_URL") + PropertiesConfig.getPropertiesValueByKey("PROJECT_NAME") + "/docinfo_id" + newdoc.getId() + ".shtml";
+			//String content = PropertiesConfig.getPropertiesValueByKey("DOMAIN_URL") + PropertiesConfig.getPropertiesValueByKey("PROJECT_NAME") + "/docinfo_id" + newdoc.getId() + ".shtml";
+			String content = PropertiesConfig.getPropertiesValueByKey("DOMAIN_URL") + PropertiesConfig.getPropertiesValueByKey("PROJECT_NAME") + "/docinfo_id" + docname + ".shtml";
 			
 			//二维码图片中间LOGO
 			String iconPath = DocAction.class.getResource("/").toString();
@@ -297,10 +360,11 @@ public class DocAction extends BaseAction {
 			log.info("qrPicPath=[" + qrPicPath + "]");
 			log.info("iconPath=[" + iconPath + "]");
 			//生成二维码
-			handler.encoderQRCode(content, qrPicPath, imgType, iconPath);
-			qr_url = PropertiesConfig.getPropertiesValueByKey("DOMAIN_URL") + "ge_pic/" + newdoc.getId() + "/qrcode_" + newdoc.getId() + "." + imgType;
+			handler.encoderQRCode(content, qrPicPath, QRCodeUtil.imgType, iconPath);
+			qr_url = PropertiesConfig.getPropertiesValueByKey("DOMAIN_URL") + "ge_pic/" + newdoc.getId() + "/qrcode_" + newdoc.getId() + "." + QRCodeUtil.imgType;
 			
-			newdoc.setQrcode("qrcode_" + newdoc.getId() + "." + imgType);
+			downloadPicId = "" + newdoc.getId();
+			newdoc.setQrcode("qrcode_" + newdoc.getId() + "." + QRCodeUtil.imgType);
 			
 			docService.updateDoc(newdoc);
 		} catch(Exception e) {
@@ -437,5 +501,29 @@ public class DocAction extends BaseAction {
 
 	public void setQr_url(String qr_url) {
 		this.qr_url = qr_url;
+	}
+
+	public String getDownloadPicId() {
+		return downloadPicId;
+	}
+
+	public void setDownloadPicId(String downloadPicId) {
+		this.downloadPicId = downloadPicId;
+	}
+
+	public String getDocname() {
+		return docname;
+	}
+
+	public void setDocname(String docname) {
+		this.docname = docname;
+	}
+
+	public String getDoctype() {
+		return doctype;
+	}
+
+	public void setDoctype(String doctype) {
+		this.doctype = doctype;
 	}
 }

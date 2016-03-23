@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC 
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" 
     "http://struts.apache.org/dtds/struts-2.0.dtd">
@@ -9,6 +9,16 @@
 		<action name="showDocInfoAction" class="webDocInfoAction" method="showDocInfoAction">
 			<result name="checkerr">/page/web/nodocument.jsp</result>
 			<result name="success">/page/web/docinfo.jsp</result>
+		</action>
+		
+		<action name="showApplyAction" class="webApplyAction" method="showApplyAction">
+			<result name="*">/page/web/apply.jsp</result>
+		</action>
+		
+		<action name="applyAction" class="webApplyAction" method="applyAction">
+			<result name="checkerr">/page/web/apply.jsp</result>
+			<result name="error">/page/web/applyfail.jsp</result>
+			<result name="success">/page/web/applyok.jsp</result>
 		</action>
 		
 	</package>

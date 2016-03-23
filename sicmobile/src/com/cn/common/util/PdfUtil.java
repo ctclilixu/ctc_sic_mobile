@@ -250,6 +250,71 @@ public class PdfUtil {
 		}
 		return false;
 	}
+	
+	/**
+	 * 根据关键字，获取内容
+	 * @param text
+	 * @param key
+	 * @param flag
+	 * @return
+	 */
+	public static String getContentByKeyword(String text, String key, boolean flag) {
+		String result = "";
+		if(text.indexOf(key) >= 0) {
+			String s[] = text.split(key);
+			String ss[] = s[1].split("\r\n");
+			int i = 0;
+			for(String sss : ss) {
+				if(!"".equals(sss.trim())) {
+					if(!sss.startsWith("• ") && !sss.startsWith("? ")) {
+						if(flag) {
+							if(gePdfTextKeyCheck("Features", sss, i)) {
+								break;
+							} else {
+								if(i > 0) {
+									result = result.substring(0, result.lastIndexOf("\r\n"));
+								}
+								result += sss.replace("• ", "").replace("? ", "") + "\r\n";
+							}
+						} else {
+							break;
+						}
+					} else {
+						result += sss.replace("• ", "").replace("? ", "") + "\r\n";
+					}
+				}
+				i++;
+			}
+		}
+		result = result.replace("  ", " ");
+		return result;
+	}
+	
+	/**
+	 * 根据起始位置获取内容
+	 * @param text
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public static String getContentByIndex(String text, String key, String end) {
+		String result = "";
+		if(text.indexOf(key) >= 0) {
+			String s[] = text.split(key);
+			String ss[] = s[1].split("\r\n");
+			for(String sss : ss) {
+				if(!"".equals(sss.trim())) {
+					if(sss.indexOf(end) >= 0) {
+						break;
+					} else {
+						result += sss + " ";
+					}
+				}
+			}
+		}
+		result = result.replace("  ", " ");
+		return result;
+	}
 
 	public static void main(String[] args) {
 		//String pdfFilePath = "d://GEA32118 SiC Module Fact Sheet_R2.pdf";
@@ -302,67 +367,22 @@ public class PdfUtil {
 			}
 			
 			//Features
-			if(text.indexOf("Features") >= 0) {
-				String s[] = text.split("Features");
-				String ss[] = s[1].split("\r\n");
-				int i = 0;
-				for(String sss : ss) {
-					if(!"".equals(sss.trim())) {
-						if(!sss.startsWith("• ") && !sss.startsWith("? ")) {
-							if(gePdfTextKeyCheck("Features", sss, i)) {
-								break;
-							} else {
-								features += sss.replace("• ", "").replace("? ", "") + "\r\n";
-							}
-						} else {
-							features += sss.replace("• ", "").replace("? ", "") + "\r\n";
-						}
-					}
-					i++;
-				}
-			}
-			
+			features = PdfUtil.getContentByKeyword(text, "Features", true);
 			//Benefits
-			if(text.indexOf("Benefits") >= 0) {
-				String s[] = text.split("Benefits");
-				String ss[] = s[1].split("\r\n");
-				int i = 0;
-				for(String sss : ss) {
-					if(!"".equals(sss.trim())) {
-						if(!sss.startsWith("• ") && !sss.startsWith("? ")) {
-							if(gePdfTextKeyCheck("Benefits", sss, i)) {
-								break;
-							} else {
-								benefits += sss.replace("• ", "").replace("? ", "") + "\r\n";
-							}
-						} else {
-							benefits += sss.replace("• ", "").replace("? ", "") + "\r\n";
-						}
-					}
-					i++;
-				}
-			}
-			
+			benefits = PdfUtil.getContentByKeyword(text, "Benefits", true);
 			//Applications
-			if(text.indexOf("Applications") >= 0) {
-				String s[] = text.split("Applications");
-				String ss[] = s[1].split("\r\n");
-				for(String sss : ss) {
-					if(!"".equals(sss.trim())) {
-						if(!sss.startsWith("• ") && !sss.startsWith("? ")) {
-							break;
-						} else {
-							applications += sss.replace("• ", "").replace("? ", "") + "\r\n";
-						}
-					}
-				}
-			}
+			applications = PdfUtil.getContentByKeyword(text, "Applications", false);
+			
 			System.out.println("productcode=[" + productcode + "]");
 			System.out.println("features=[" + features + "]");
 			System.out.println("benefits=[" + benefits + "]");
 			System.out.println("applications=[" + applications + "]");
 		} else {
 			//其他格式
+			String lowInductanceModules = "Low-inductance modules  \r\nwith Intelligent Gate Drive";
+			String controlsProtection = "Controls and Protection";
+			String sicUserInterface = "SiC User Interface ";
+			String powerCapabilityEfficiency = "Power Capability and Efficiency";
 			//文件描述
 			String tmp = text.replace(subtitle, "");
 			tmp = tmp.replace("fact sheet", "");
@@ -376,6 +396,24 @@ public class PdfUtil {
 				}
 				desc += s2[i] + "\r\n";
 			}
+			
+			//Low-inductance modules
+			//with Intelligent Gate Drive
+			lowInductanceModules = PdfUtil.getContentByIndex(text, "Low-inductance modules  \r\nwith Intelligent Gate Drive", "Controls and Protection");
+			
+			//Controls and Protection
+			controlsProtection = PdfUtil.getContentByIndex(text, "Controls and Protection", "SiC User Interface");
+			
+			//SiC User Interface
+			sicUserInterface = PdfUtil.getContentByIndex(text, "SiC User Interface ", "fact sheet");
+			
+			//Power Capability and Efficiency
+			powerCapabilityEfficiency = PdfUtil.getContentByIndex(text, "Power Capability and Efficiency", "www.GESiliconCarbide.com");
+			
+			System.out.println("lowInductanceModules=[" + lowInductanceModules + "]");
+			System.out.println("controlsProtection=[" + controlsProtection + "]");
+			System.out.println("sicUserInterface=[" + sicUserInterface + "]");
+			System.out.println("powerCapabilityEfficiency=[" + powerCapabilityEfficiency + "]");
 		}
 		System.out.println("desc=[" + desc + "]");
 		System.out.println("title=[" + title + "]");
