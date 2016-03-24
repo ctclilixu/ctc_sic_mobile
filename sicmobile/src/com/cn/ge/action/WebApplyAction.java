@@ -85,17 +85,27 @@ public class WebApplyAction extends BaseAction {
 			customerService.insertCustomer(addCustomerDto);
 			addCustomerDto = new CustomerDto();
 			
-//			//邮件发送人，MailSender有默认发送人。
-//			String from = "";
-//			//收件人姓名，MailSender有默认收件人。
-//			String to = "";
-//			String subject = "邮件主题";
-//			String body = "邮件内容";
-//			//发件人名
-//			String username = "发件人名";
-//			//附件，格式：filename1,filename2,filename3...（这里需要在global.properties配置文件中指定附件目录）
-//			String attachfile = "";
-//			MailSender.send(from, to, subject, body, username, attachfile);
+			//邮件发送人，MailSender有默认发送人。
+			final String from = "";
+			//收件人姓名，MailSender有默认收件人。
+			final String to = "";
+			final String subject = "测试邮件主题";
+			final String body = "测试邮件内容";
+			//发件人名
+			final String username = "测试发件人名";
+			//附件，格式：filename1,filename2,filename3...（这里需要在global.properties配置文件中指定附件目录）
+			final String attachfile = "";
+			
+			new Thread() {
+				public void run() {
+					try {
+						MailSender.send(from, to, subject, body, username, attachfile);
+					} catch (Exception e) {
+						log.error("MailSender.send error:" + e);
+						e.printStackTrace();
+					}
+				};
+			}.start();
 		} catch(Exception e) {
 			log.error("applyAction error:" + e);
 			return ERROR;

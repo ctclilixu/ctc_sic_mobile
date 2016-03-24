@@ -1,4 +1,4 @@
-/*
+﻿/*
 SQLyog 企业版 - MySQL GUI v8.14 
 MySQL - 5.1.51-community : Database - ge
 *********************************************************************
@@ -122,7 +122,7 @@ CREATE TABLE `tbresource` (
 
 /*Data for the table `tbresource` */
 
-insert  into `tbresource`(`id`,`url`,`note`,`status`,`createdate`,`sort`,`parentid`,`restype`) values (1,'系统功能','系统功能',1,'2016-02-08 00:00:00',1,-1,1),(10,'/doc/showUploadDocAction.action','首页',1,'2016-02-08 00:00:00',1,1,2),(11,'/doc/showDocManageAction.action','PDF资料管理',1,'2016-02-08 00:00:00',2,1,2),(12,'/customer/showCustomerManageAction.action','客户信息管理',1,'2016-02-08 00:00:00',3,1,2),(13,'/user/showUserManagePageAction.action','后台用户管理',1,'2016-02-08 00:00:00',4,1,2),(14,'/user/showUpdPasswordAction.action','修改密码',1,'2016-02-08 00:00:00',5,1,2);
+insert  into `tbresource`(`id`,`url`,`note`,`status`,`createdate`,`sort`,`parentid`,`restype`) values (1,'系统功能','系统功能',1,'2016-02-08 00:00:00',1,-1,1),(10,'/doc/showUploadDocAction.action','首页',1,'2016-02-08 00:00:00',1,1,2),(11,'/doc/showDocManageAction.action','PDF资料管理',1,'2016-02-08 00:00:00',2,1,2),(12,'/customer/showCustomerManageAction.action','客户信息管理',1,'2016-02-08 00:00:00',3,1,2),(13,'/user/showUserManagePageAction.action','后台用户管理',0,'2016-02-08 00:00:00',4,1,2),(14,'/user/showUpdPasswordAction.action','修改密码',1,'2016-02-08 00:00:00',5,1,2);
 
 /*Table structure for table `tbrole` */
 

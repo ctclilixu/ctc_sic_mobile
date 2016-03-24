@@ -280,20 +280,31 @@ public class MailSender {
 
 	public static void main(String[] args) throws Exception {
 		//发送邮件测试
-		String from = "";
+		final String from = "";
 		//收件人姓名
-		String to = "15261688@qq.com";
-		String subject = "邮件主题";
-		String body = "邮件内容";
+		final String to = "";
+		final String subject = "邮件主题";
+		final String body = "邮件内容";
 		//发件人名
-		String username = "发件人名";
+		final String username = "发件人名";
 		
 		//附件，格式：filename1,filename2,filename3...（这里需要在global.properties配置文件中指定附件目录）
 		//String attachfile = "attachfile1.txt,attachfile2.txt";
-		String attachfile = "";
+		final String attachfile = "";
 		
 		//MailSender.send(to, subject, body, attachfile);
-		MailSender.send(from, to, subject, body, username, attachfile);
+		
+		new Thread() {
+			public void run() {
+				try {
+					MailSender.send(from, to, subject, body, username, attachfile);
+				} catch (Exception e) {
+					System.out.println(e);
+					e.printStackTrace();
+				}
+			};
+		}.start();
+		
 		//MailSender.send(from, to, subject, body, defaultContentType, username, defaultCharset, attachfile);
 	}
 }

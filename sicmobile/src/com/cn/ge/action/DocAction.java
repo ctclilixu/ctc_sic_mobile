@@ -35,6 +35,8 @@ public class DocAction extends BaseAction {
 	private static final long serialVersionUID = 4184038674769958248L;
 	private static final Logger log = LogManager.getLogger(DocAction.class);
 	
+	public static String linefeed = "\n";
+	
 	private DocService docService;
 	
 	/**
@@ -68,7 +70,7 @@ public class DocAction extends BaseAction {
 		try {
 			this.clearMessages();
 			//图片地址
-			String qrPicPath = PropertiesConfig.getPropertiesValueByKey("PIC_PATH") + downloadPicId + "\\qrcode_" + downloadPicId + "." + QRCodeUtil.imgType;
+			String qrPicPath = PropertiesConfig.getPropertiesValueByKey("PIC_PATH") + downloadPicId + "/qrcode_" + downloadPicId + "." + QRCodeUtil.imgType;
 			
 			response.setHeader("Content-Disposition", "attachment; filename=" + "qrcode_" + downloadPicId + "." + QRCodeUtil.imgType);
 			OutputStream outStream = response.getOutputStream();
@@ -170,18 +172,20 @@ public class DocAction extends BaseAction {
 			
 			//解析PDF文件
 			//String txt = PdfUtil.getTextFromPdf(targetPath + newfilename + s);
+			log.info("aaaaaaaaaaaaaaaaaaaaa");
 			String text = PdfUtil.getTextFromPdf(addPdfFile);
+			log.info(text);
 			String title = "";
 			String subtitle = "";
 			String desc = "";
 			
 			//第一行数据为资料标题
-			String s1[] = text.split("\r\n");
+			String s1[] = text.split(linefeed);
 			title = s1[0];
 			//副标题
 			if(text.indexOf("fact sheet") >= 0) {
 				String s[] = text.split("fact sheet");
-				String ss[] = s[1].split("\r\n");
+				String ss[] = s[1].split(linefeed);
 				subtitle = ss[1].trim();
 			}
 			
@@ -206,7 +210,7 @@ public class DocAction extends BaseAction {
 				//Product Code
 				if(text.indexOf("Product Code") >= 0) {
 					String s[] = text.split("Product Code");
-					String ss[] = s[1].split("\r\n");
+					String ss[] = s[1].split(linefeed);
 					productcode = ss[0].trim();
 				}
 				
@@ -250,9 +254,9 @@ public class DocAction extends BaseAction {
 				//文件描述
 				String tmp = text.replace(subtitle, "");
 				tmp = tmp.replace("fact sheet", "");
-				tmp = tmp.replace("\r\n\r\n", "\r\n");
-				tmp = tmp.replace("\r\n\r\n", "\r\n");
-				String s2[] = tmp.split("\r\n");
+				tmp = tmp.replace(linefeed + linefeed, linefeed);
+				tmp = tmp.replace(linefeed + linefeed, linefeed);
+				String s2[] = tmp.split(linefeed);
 				//文件描述
 				for(int i = 1; i < s2.length; i++) {
 					if("Low-inductance modules".equals(s2[i].trim())) {
@@ -323,7 +327,7 @@ public class DocAction extends BaseAction {
 			
 			//PDF图片
 			List<String> piclist = PdfUtil.getPicFromPdf(addPdfFile, "" + newdoc.getId(),
-					PropertiesConfig.getPropertiesValueByKey("PIC_PATH") + "\\" + newdoc.getId() + "\\");
+					PropertiesConfig.getPropertiesValueByKey("PIC_PATH") + "/" + newdoc.getId() + "/");
 			if(piclist != null) {
 				if(piclist.size() > 1) {
 					newdoc.setPicture1(piclist.get(0));
@@ -345,7 +349,7 @@ public class DocAction extends BaseAction {
 			//生成二维码qrcode
 			QRCodeUtil handler = new QRCodeUtil();
 			//二维码图片保存路径
-			String qrPicPath = PropertiesConfig.getPropertiesValueByKey("PIC_PATH") + newdoc.getId() + "\\qrcode_" + newdoc.getId() + "." + QRCodeUtil.imgType;
+			String qrPicPath = PropertiesConfig.getPropertiesValueByKey("PIC_PATH") + newdoc.getId() + "/qrcode_" + newdoc.getId() + "." + QRCodeUtil.imgType;
 			//二维码内容=资料明细路径
 			//String content = PropertiesConfig.getPropertiesValueByKey("DOMAIN_URL") + PropertiesConfig.getPropertiesValueByKey("PROJECT_NAME") + "/docinfo_id" + newdoc.getId() + ".shtml";
 			String content = PropertiesConfig.getPropertiesValueByKey("DOMAIN_URL") + PropertiesConfig.getPropertiesValueByKey("PROJECT_NAME") + "/docinfo_id" + docname + ".shtml";

@@ -24,7 +24,7 @@
 	<div class="line">
 	</div>
 	<div class="box5">
-		<p>我们将会在24小时以内以邮件的形式通知您审核结果</p>
+		<p>我们将尽快以邮件的方式联系您！</p>
 	</div>
 </div>
 <div class="clear"></div>

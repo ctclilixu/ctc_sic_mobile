@@ -163,7 +163,7 @@
 										</div>
 									</td>
 									-->
-									<td><s:property value="tell"/></td>
+									<td><s:property value="phone"/></td>
 									<td><s:property value="mail"/></td>
 									<!--
 									<td>
