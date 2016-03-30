@@ -23,6 +23,13 @@ public interface CustomerDao {
 	public int queryCustomerCountByPage(String companyname);
 	
 	/**
+	 * 根据手机号码查询客户信息
+	 * @param phone
+	 * @return
+	 */
+	public CustomerDto queryCustomerByPhone(String phone);
+	
+	/**
 	 * 根据登录ID查询客户
 	 * @param id
 	 * @return

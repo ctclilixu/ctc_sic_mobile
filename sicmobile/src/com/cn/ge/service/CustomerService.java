@@ -21,6 +21,13 @@ public interface CustomerService {
 	public CustomerDto queryCustomerByID(String id);
 	
 	/**
+	 * 根据手机号码查询客户信息
+	 * @param phone
+	 * @return
+	 */
+	public CustomerDto queryCustomerByPhone(String phone);
+	
+	/**
 	 * 删除客户
 	 * @param id
 	 */

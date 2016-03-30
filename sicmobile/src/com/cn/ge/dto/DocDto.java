@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cn.common.dto.BaseDto;
+import com.cn.common.util.PdfUtil;
 import com.cn.common.util.PropertiesConfig;
 
 /**
@@ -589,7 +590,7 @@ public class DocDto extends BaseDto {
 	public List<String> getContent1List() {
 		List<String> list = new ArrayList<String>();
 		if(content1 != null && !"".equals(content1)) {
-			String s[] = content1.split("\r\n");
+			String s[] = content1.split(PdfUtil.linefeed);
 			for(String ss : s) {
 				list.add(ss);
 			}
@@ -605,7 +606,7 @@ public class DocDto extends BaseDto {
 	public List<String> getContent2List() {
 		List<String> list = new ArrayList<String>();
 		if(content2 != null && !"".equals(content2)) {
-			String s[] = content2.split("\r\n");
+			String s[] = content2.split(PdfUtil.linefeed);
 			for(String ss : s) {
 				list.add(ss);
 			}
@@ -621,7 +622,7 @@ public class DocDto extends BaseDto {
 	public List<String> getContent3List() {
 		List<String> list = new ArrayList<String>();
 		if(content3 != null && !"".equals(content3)) {
-			String s[] = content3.split("\r\n");
+			String s[] = content3.split(PdfUtil.linefeed);
 			for(String ss : s) {
 				list.add(ss);
 			}
@@ -637,7 +638,7 @@ public class DocDto extends BaseDto {
 	public List<String> getContent4List() {
 		List<String> list = new ArrayList<String>();
 		if(content4 != null && !"".equals(content4)) {
-			String s[] = content4.split("\r\n");
+			String s[] = content4.split(PdfUtil.linefeed);
 			for(String ss : s) {
 				list.add(ss);
 			}
@@ -653,7 +654,7 @@ public class DocDto extends BaseDto {
 	public List<String> getContent5List() {
 		List<String> list = new ArrayList<String>();
 		if(content5 != null && !"".equals(content5)) {
-			String s[] = content5.split("\r\n");
+			String s[] = content5.split(PdfUtil.linefeed);
 			for(String ss : s) {
 				list.add(ss);
 			}

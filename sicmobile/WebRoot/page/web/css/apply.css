@@ -10,7 +10,7 @@ li{list-style:none;list-style-type:none;}
 .fr{float:right;}
 .none{display:none;}
 .block{display:block;}
-/*处理文本框文字溢出问题，overflow可强制去掉多余部分的代码*/
+/*澶勭悊鏂囨湰妗嗘枃瀛楁孩鍑洪棶棰橈紝overflow鍙己鍒跺幓鎺夊浣欓儴鍒嗙殑浠ｇ爜*/
 .wrap{word-wrap:break-word;overflow:hidden;}
 /*link*/
 a:link{color:#005a98;text-decoration:none}
@@ -22,7 +22,7 @@ a:hover{color:#cf0010;text-decoration:underline}
 #dw1{ background-image: url(qmenu.png); position:relative;left:230px;top:12px;}
 #dw2{ background-image: url(qmenu.png); position:absolute;left:230px;top:12px;}
 
-/*通用元素*/
+/*閫氱敤鍏冪礌*/
 .mgl30{margin-left:30px;}
 .mgr0{margin-right:0px;}
 .mgt30{margin-top:30px;}
@@ -47,7 +47,7 @@ body{background:#24AEEF;}
 .applyform{width:100%;float:left;padding-top:50px;margin-bottom:50px;}
 .applyform li{width:96%;height:20%;background:#FFFFFF;float:left;margin:20px 0 20px 20px;}
 .applyform li label{font-size:30px;color:#666666;float:left;padding-top:20px;padding-left:20px;}
-.applyform input{border:0;width:80%;height:80px;margin-left:20px;-webkit-appearance: none;}
+.applyform input{border:0;width:auto;height:80px;margin-left:20px;-webkit-appearance: none;font-size: 30px;}
 .applyform .submit{width:90%;-webkit-border-radius: 5px;
 -moz-border-radius: 5px;
 border-radius: 5px;
@@ -55,7 +55,9 @@ font-size:40px;
 background:#0383C0;border:2px solid #045A83;height:80px;color:#FFFFFF;margin:0 auto;}
 .submitbox{width:96%;float:left;padding-left:70px;padding-top:30px;}
 
-<!--结束apply-->
+
+.wordred{color:#FF0000;float:left; }
+<!--缁撴潫apply-->
 
 
 

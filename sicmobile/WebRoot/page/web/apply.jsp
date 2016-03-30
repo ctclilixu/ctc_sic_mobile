@@ -29,7 +29,16 @@ function apply() {
 	<s:form id="mainform" name="mainform" target="_blank" method="POST" cssClass="applyform">
 		<ul>
 			<li>
-				<s:actionmessage />
+				<s:if test="hasActionMessages()">
+					<label for="name">
+				</s:if>
+				<s:else>
+					<label for="name" style="display: none;">
+				</s:else>
+						<div class="wordred">
+							<s:actionmessage />
+						</div>
+					</label>
 			</li>
 			<li>
 				<label for="name">客户名称</label>

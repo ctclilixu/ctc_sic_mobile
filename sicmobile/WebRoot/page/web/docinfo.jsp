@@ -126,7 +126,7 @@
 		</ul>
 	</div>
 	<div class="box4">
-		<a class="botton" href='<%=request.getContextPath()%>/showapply.shtml'>
+		<a class="botton" href='<%=request.getContextPath()%>/showapply.shtml?strApplyDocname=<s:property value="docInfoDto.docname"/>'>
 			看全部内容请发送申请
 		</a>
 	</div>

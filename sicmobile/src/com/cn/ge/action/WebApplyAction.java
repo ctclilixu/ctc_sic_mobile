@@ -24,6 +24,8 @@ public class WebApplyAction extends BaseAction {
 	
 	private CustomerDto addCustomerDto;
 	
+	private String strApplyDocname;
+	
 	/**
 	 * 申请页面
 	 * @return
@@ -32,6 +34,7 @@ public class WebApplyAction extends BaseAction {
 		try {
 			this.clearMessages();
 			addCustomerDto = new CustomerDto();
+			addCustomerDto.setDocname(strApplyDocname);
 		} catch(Exception e) {
 			log.error("showApplyAction error:" + e);
 			return ERROR;
@@ -77,28 +80,48 @@ public class WebApplyAction extends BaseAction {
 			}
 			//新增客户信息
 			//客户手机号码为唯一
+			log.info("addCustomerDto.getPhone()=" + addCustomerDto.getPhone());
+			log.info("addCustomerDto.getCustomername()=" + addCustomerDto.getCustomername());
+			log.info("addCustomerDto.getCompanyname()=" + addCustomerDto.getCompanyname());
+			log.info("addCustomerDto.getMail()=" + addCustomerDto.getMail());
+			CustomerDto customerDto = customerService.queryCustomerByPhone(addCustomerDto.getPhone());
+			if(customerDto == null) {
+				//新增客户申请数据
+				//状态=申请
+				addCustomerDto.setStatus(10);
+				addCustomerDto.setCreateuser(this.getIP());
+				addCustomerDto.setUpdateuser(this.getIP());
+				customerService.insertCustomer(addCustomerDto);
+			} else {
+				//更新数据
+				//状态=申请
+				customerDto.setCustomername(addCustomerDto.getCustomername());
+				customerDto.setCompanyname(addCustomerDto.getCompanyname());
+				customerDto.setMail(addCustomerDto.getMail());
+				customerDto.setUpdateuser(this.getIP());
+				customerService.updateCustomer(customerDto);
+			}
 			
-			//状态=申请
-			addCustomerDto.setStatus(10);
-			addCustomerDto.setCreateuser(this.getIP());
-			addCustomerDto.setUpdateuser(this.getIP());
-			customerService.insertCustomer(addCustomerDto);
-			addCustomerDto = new CustomerDto();
-			
-			//邮件发送人，MailSender有默认发送人。
-			final String from = "";
-			//收件人姓名，MailSender有默认收件人。
-			final String to = "";
-			final String subject = "测试邮件主题";
-			final String body = "测试邮件内容";
-			//发件人名
-			final String username = "测试发件人名";
-			//附件，格式：filename1,filename2,filename3...（这里需要在global.properties配置文件中指定附件目录）
-			final String attachfile = "";
+			//发送邮件
+			final String subject = addCustomerDto.getCustomername() + "申请查看“" + addCustomerDto.getDocname() + "”详细资料。";
+			final String body = addCustomerDto.getCustomername() + "申请查看“" + addCustomerDto.getDocname() + "”详细资料。"
+					+ "</br>客户名：" + addCustomerDto.getCustomername()
+					+ "</br>公司名：" + addCustomerDto.getCompanyname()
+					+ "</br>手机号码：" + addCustomerDto.getPhone()
+					+ "</br>邮箱地址：" + addCustomerDto.getMail();
 			
 			new Thread() {
 				public void run() {
 					try {
+						//邮件发送人，MailSender有默认发送人。
+						String from = "";
+						//收件人姓名，MailSender有默认收件人。
+						String to = "";
+						//发件人名
+						String username = "SiC.Mobile";
+						//附件，格式：filename1,filename2,filename3...（这里需要在global.properties配置文件中指定附件目录）
+						String attachfile = "";
+						
 						MailSender.send(from, to, subject, body, username, attachfile);
 					} catch (Exception e) {
 						log.error("MailSender.send error:" + e);
@@ -106,6 +129,8 @@ public class WebApplyAction extends BaseAction {
 					}
 				};
 			}.start();
+			
+			addCustomerDto = new CustomerDto();
 		} catch(Exception e) {
 			log.error("applyAction error:" + e);
 			return ERROR;
@@ -127,5 +152,13 @@ public class WebApplyAction extends BaseAction {
 
 	public void setAddCustomerDto(CustomerDto addCustomerDto) {
 		this.addCustomerDto = addCustomerDto;
+	}
+
+	public String getStrApplyDocname() {
+		return strApplyDocname;
+	}
+
+	public void setStrApplyDocname(String strApplyDocname) {
+		this.strApplyDocname = strApplyDocname;
 	}
 }

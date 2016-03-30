@@ -35,8 +35,6 @@ public class DocAction extends BaseAction {
 	private static final long serialVersionUID = 4184038674769958248L;
 	private static final Logger log = LogManager.getLogger(DocAction.class);
 	
-	public static String linefeed = "\n";
-	
 	private DocService docService;
 	
 	/**
@@ -172,20 +170,19 @@ public class DocAction extends BaseAction {
 			
 			//解析PDF文件
 			//String txt = PdfUtil.getTextFromPdf(targetPath + newfilename + s);
-			log.info("aaaaaaaaaaaaaaaaaaaaa");
 			String text = PdfUtil.getTextFromPdf(addPdfFile);
-			log.info(text);
+			//log.info(text);
 			String title = "";
 			String subtitle = "";
 			String desc = "";
 			
 			//第一行数据为资料标题
-			String s1[] = text.split(linefeed);
+			String s1[] = text.split(PdfUtil.linefeed);
 			title = s1[0];
 			//副标题
 			if(text.indexOf("fact sheet") >= 0) {
 				String s[] = text.split("fact sheet");
-				String ss[] = s[1].split(linefeed);
+				String ss[] = s[1].split(PdfUtil.linefeed);
 				subtitle = ss[1].trim();
 			}
 			
@@ -210,12 +207,13 @@ public class DocAction extends BaseAction {
 				//Product Code
 				if(text.indexOf("Product Code") >= 0) {
 					String s[] = text.split("Product Code");
-					String ss[] = s[1].split(linefeed);
+					String ss[] = s[1].split(PdfUtil.linefeed);
 					productcode = ss[0].trim();
 				}
 				
 				//Features
 				features = PdfUtil.getContentByKeyword(text, "Features", true);
+				log.info("features=[" + features + "]");
 				//Benefits
 				benefits = PdfUtil.getContentByKeyword(text, "Benefits", true);
 				//Applications
@@ -254,9 +252,9 @@ public class DocAction extends BaseAction {
 				//文件描述
 				String tmp = text.replace(subtitle, "");
 				tmp = tmp.replace("fact sheet", "");
-				tmp = tmp.replace(linefeed + linefeed, linefeed);
-				tmp = tmp.replace(linefeed + linefeed, linefeed);
-				String s2[] = tmp.split(linefeed);
+				tmp = tmp.replace(PdfUtil.linefeed + PdfUtil.linefeed, PdfUtil.linefeed);
+				tmp = tmp.replace(PdfUtil.linefeed + PdfUtil.linefeed, PdfUtil.linefeed);
+				String s2[] = tmp.split(PdfUtil.linefeed);
 				//文件描述
 				for(int i = 1; i < s2.length; i++) {
 					if("Low-inductance modules".equals(s2[i].trim())) {

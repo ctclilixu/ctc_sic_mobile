@@ -19,6 +19,7 @@ import javax.mail.internet.MimeUtility;
 
 import com.cn.common.util.PropertiesConfig;
 import com.cn.common.util.StringUtil;
+import com.cn.ge.dto.CustomerDto;
 
 /**
  * MailSender
@@ -155,6 +156,7 @@ public class MailSender {
 		Session session = Session.getInstance(props, null);
 		props.put("mail.smtp.host", mailHost);
 		props.put("mail.smtp.auth", "true");
+		
 		Message msg = new MimeMessage(session);
 		if (from != null) {
 			msg.setFrom(new InternetAddress(from, username, charset));
@@ -279,27 +281,34 @@ public class MailSender {
 	}
 
 	public static void main(String[] args) throws Exception {
-		//发送邮件测试
-		final String from = "";
-		//收件人姓名
-		final String to = "";
-		final String subject = "邮件主题";
-		final String body = "邮件内容";
-		//发件人名
-		final String username = "发件人名";
-		
-		//附件，格式：filename1,filename2,filename3...（这里需要在global.properties配置文件中指定附件目录）
-		//String attachfile = "attachfile1.txt,attachfile2.txt";
-		final String attachfile = "";
-		
-		//MailSender.send(to, subject, body, attachfile);
+		CustomerDto addCustomerDto = new CustomerDto();
+		addCustomerDto.setCustomername("姓名111");
+		addCustomerDto.setCompanyname("公司名111");
+		addCustomerDto.setPhone("13400000001");
+		addCustomerDto.setMail("12121@163.com");
+		addCustomerDto.setDocname("资料名1221");
+		//发送邮件
+		final String subject = addCustomerDto.getCustomername() + "申请查看“" + addCustomerDto.getDocname() + "”详细资料。";
+		final String body = addCustomerDto.getCustomername() + "申请查看“" + addCustomerDto.getDocname() + "”详细资料。"
+				+ "</br>客户名：" + addCustomerDto.getCustomername()
+				+ "</br>公司名：" + addCustomerDto.getCompanyname()
+				+ "</br>手机号码：" + addCustomerDto.getPhone()
+				+ "</br>邮箱地址：" + addCustomerDto.getMail();
 		
 		new Thread() {
 			public void run() {
 				try {
+					//邮件发送人，MailSender有默认发送人。
+					String from = "";
+					//收件人姓名，MailSender有默认收件人。
+					String to = "";
+					//发件人名
+					String username = "SiC.Mobile";
+					//附件，格式：filename1,filename2,filename3...（这里需要在global.properties配置文件中指定附件目录）
+					String attachfile = "";
+					
 					MailSender.send(from, to, subject, body, username, attachfile);
 				} catch (Exception e) {
-					System.out.println(e);
 					e.printStackTrace();
 				}
 			};

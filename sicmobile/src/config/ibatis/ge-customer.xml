@@ -47,6 +47,11 @@
 		LIMIT #start#, #end#
 	</select>
 	
+	<select id="queryCustomerByPhone" parameterClass="java.util.Map" resultMap="CustomerDto">
+		select * from tbcustomer where 
+			phone = #phone#
+	</select>
+	
 	<select id="queryCustomerByID" parameterClass="java.util.Map" resultMap="CustomerDto">
 		select * from tbcustomer where 
 			id = #id#

@@ -45,6 +45,12 @@ public class CustomerServiceImpl implements CustomerService {
 	public void deleteCustomer(String id) {
 		customerDao.deleteCustomer(id);
 	}
+	
+	@Override
+	public CustomerDto queryCustomerByPhone(String phone) {
+		phone = StringUtil.replaceDatabaseKeyword_mysql(phone);
+		return customerDao.queryCustomerByPhone(phone);
+	}
 
 	@Override
 	public void insertCustomer(CustomerDto customer) {

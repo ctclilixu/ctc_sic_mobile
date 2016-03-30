@@ -21,6 +21,11 @@ public class CustomerDto extends BaseDto {
 	 * 客户名
 	 */
 	private String customername;
+	
+	/**
+	 * 客户提交申请的资料名
+	 */
+	private String docname;
 
 	/**
 	 * 客户公司名称
@@ -322,6 +327,14 @@ public class CustomerDto extends BaseDto {
 
 	public void setUpdatedate(String updatedate) {
 		this.updatedate = updatedate;
+	}
+
+	public String getDocname() {
+		return docname;
+	}
+
+	public void setDocname(String docname) {
+		this.docname = docname;
 	}
 
 }

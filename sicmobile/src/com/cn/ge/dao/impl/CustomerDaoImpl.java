@@ -46,6 +46,18 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
 		}
 		return null;
 	}
+	
+	@Override
+	public CustomerDto queryCustomerByPhone(String phone) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("phone", phone);
+		@SuppressWarnings("unchecked")
+		List<CustomerDto> list = getSqlMapClientTemplate().queryForList("queryCustomerByPhone", paramMap);
+		if(list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
 
 	@Override
 	public void deleteCustomer(String id) {
