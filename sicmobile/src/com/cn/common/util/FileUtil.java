@@ -45,14 +45,11 @@ public class FileUtil {
 			if(!targetdir.exists()) {
 				targetdir.mkdir();
 			}
-			int bytesum = 0;
 			int byteread = 0;
 			InputStream inStream = new FileInputStream(oldPath);
 			FileOutputStream fs = new FileOutputStream(targetPath + filename);
 			byte[] buffer = new byte[1024];
 			while ((byteread = inStream.read(buffer)) != -1) { 
-				bytesum += byteread;
-				log.info("bytesum=" + bytesum);
 				fs.write(buffer, 0, byteread);
 			}
 			inStream.close();

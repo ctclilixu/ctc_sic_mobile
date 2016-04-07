@@ -14,10 +14,12 @@ public interface DocService {
 	/**
 	 * 翻页查询数据
 	 * @param docname
+	 * @param createdatelow
+	 * @param createdatehigh
 	 * @param page
 	 * @return
 	 */
-	public Page queryDocByPage(String docname, Page page);
+	public Page queryDocByPage(String docname, String createdatelow, String createdatehigh, Page page);
 	
 	/**
 	 * 根据登录ID查询资料信息
@@ -35,10 +37,11 @@ public interface DocService {
 	public DocDto queryDocByLogicID(String docname, String doctype);
 	
 	/**
-	 * 删除资料信息
+	 * 逻辑删除资料信息
 	 * @param id
+	 * @param userid
 	 */
-	public void deleteDoc(String id);
+	public void deleteDoc(String id, String userid);
 	
 	/**
 	 * 新增资料信息

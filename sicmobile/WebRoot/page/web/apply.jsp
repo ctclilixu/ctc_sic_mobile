@@ -53,7 +53,7 @@ function apply() {
 				<s:textfield name="addCustomerDto.phone" id="phone" cssClass="number" maxlength="16" theme="simple"></s:textfield>
 			</li>
 			<li>
-				<label for="password">邮箱</label>
+				<label for="password">邮　　箱</label>
 				<s:textfield name="addCustomerDto.mail" id="mail" cssClass="email" maxlength="64" theme="simple"></s:textfield>
 			</li>
 		</ul>

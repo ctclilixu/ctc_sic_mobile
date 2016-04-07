@@ -46,17 +46,17 @@ body{background:#24AEEF;}
 
 .applyform{width:100%;float:left;padding-top:50px;margin-bottom:50px;}
 .applyform li{width:96%;height:20%;background:#FFFFFF;float:left;margin:20px 0 20px 20px;}
-.applyform li label{font-size:30px;color:#666666;float:left;padding-top:20px;padding-left:20px;}
-.applyform input{border:0;width:auto;height:80px;margin-left:20px;-webkit-appearance: none;font-size: 30px;}
+.applyform li label{font-size:30px;color:#666666;float:left;padding-top:20px;padding-left:20px;background:#EAECED;padding-right:20px;padding-bottom:24px;}
+.applyform input{border:0;width:60%;height:80px;-webkit-appearance: none;float:left;font-size:30px;}
 .applyform .submit{width:90%;-webkit-border-radius: 5px;
 -moz-border-radius: 5px;
 border-radius: 5px;
 font-size:40px;
 background:#0383C0;border:2px solid #045A83;height:80px;color:#FFFFFF;margin:0 auto;}
 .submitbox{width:96%;float:left;padding-left:70px;padding-top:30px;}
+.wordred{backgounrd:#fff;color:#BB0101;float:left;font-size:30px;padding-top:20px;padding-left:20px;}
 
 
-.wordred{color:#FF0000;float:left; }
 <!--结束apply-->
 
 

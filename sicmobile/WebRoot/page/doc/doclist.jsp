@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css" />
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/common.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/Calendar3.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.5.1.js"></script>
 <title>PDF资料信息一览</title>
 <script type="text/javascript">
@@ -28,6 +29,8 @@
 	}
 	
 	function queryList() {
+		$("#queryCreatedatelow").val($("#tmpQueryCreatedatelow").val());
+		$("#queryCreatedatehigh").val($("#tmpQueryCreatedatehigh").val());
 		document.mainform.action = '../doc/queryDocAction.action';
 		document.mainform.submit();
 	}
@@ -67,6 +70,14 @@
 			return;
 		}	
 	}
+	
+	function delDoc(id) {
+		if(confirm("确定删除该文件吗？")) {
+			$("#delDocId").val(id);
+			document.mainform.action = '../doc/delDocAction.action';
+			document.mainform.submit();
+		}
+	}
 </script>
 </head>
 <body>
@@ -85,23 +96,44 @@
 			</div>
 			<s:form id="mainform" name="mainform" method="POST">
 				<s:hidden name="startIndex" id="startIndex"/>
+				<s:hidden name="delDocId" id="delDocId"/>
+				<s:hidden name="queryCreatedatelow" id="queryCreatedatelow"/>
+				<s:hidden name="queryCreatedatehigh" id="queryCreatedatehigh"/>
 				<div class="searchbox update">
 					<div class="box1" >
-						<label class="pdf10" style="width:80px">资料名称</label>
+						<label class="pdf10" style="width:60px">文件名</label>
 						<div class="box1_left"></div>
 						<div class="box1_center">
 							<s:textfield name="queryDocname" id="queryDocname" cssStyle="width:235px;" maxlength="50" theme="simple"></s:textfield>
 						</div>
 						<div class="box1_right"></div>
 					</div>
-					<div class="btn" style="margin-left: 500px;">
+					<div class="box1" style="display: none;">
+						<label class="pdf10" style="width:60px">创建时间</label>
+						<div class="box1_left"></div>
+						<div class="box1_center date_input">
+							<input type="text" id="tmpQueryCreatedatelow" disabled="disabled" style="width:135px;" value="<s:property value="queryCreatedatelow"/>"/>
+							<a class="date" href="javascript:;" onclick="new Calendar().show(document.getElementById('tmpQueryCreatedatelow'));"></a>
+						</div>
+						<div class="box1_right"></div>
+					</div>
+					<div class="box1" style="display: none;">
+						<label class="pdf10" style="width:15px">-</label>
+						<div class="box1_left"></div>
+						<div class="box1_center date_input">
+							<input type="text" id="tmpQueryCreatedatehigh" disabled="disabled" style="width:135px;" value="<s:property value="queryCreatedatehigh"/>"/>
+							<a class="date" href="javascript:;" onclick="new Calendar().show(document.getElementById('tmpQueryCreatedatehigh'));"></a>
+						</div>
+						<div class="box1_right"></div>
+					</div>
+					<div class="btn">
 						<div class="box1_left"></div>
 						<div class="box1_center">
 							<input type="button" class="input40" value="检索" onclick="queryList();"/>
 						</div>
 						<div class="box1_right"></div>
 					</div>
-					<div class="box1" style="margin-top:-3px; margin-left: -400px; color: red;">
+					<div class="box1" style="margin-top:-45px; margin-left: -350px; color: red;">
 						<s:actionmessage />
 					</div>
 				</div>
@@ -118,10 +150,12 @@
 								<td width="15%">文件名</td>
 								<td width="30%">上传PDF文件名</td>
 								<td width="8%">文件类型</td>
+								<!--
 								<td width="6%">状态</td>
+								-->
 								<td width="6%">创建者</td>
 								<td width="15%">创建时间</td>
-								<td width="10%">操作</td>
+								<td width="16%">操作</td>
 							</tr>
 							<s:iterator id="docList" value="docList" status="st1">
 								<s:if test="#st1.odd==true">
@@ -138,9 +172,7 @@
 										</div>
 									</td>
 									<td>
-										<div noWrap style="text-overflow:ellipsis;overflow:hidden">
-											<s:property value="filename"/>
-										</div>
+										<a target="_blank" href="<s:property value="url_pre"/><s:property value="id"/>.pdf"><s:property value="filename"/></a>
 									</td>
 									<td>
 										<s:if test="%{doctype == 20}">
@@ -150,6 +182,7 @@
 											概要版
 										</s:else>
 									</td>
+									<!--
 									<td>
 										<s:if test="%{status == 1}">
 											有效
@@ -158,12 +191,14 @@
 											无效
 										</s:else>
 									</td>
+									-->
 									<td>
 										<s:property value="createuser"/>
 									</td>
 									<td><s:property value="createdate"/></td>
 									<td>
 										<a href="../doc/downloadPic.action?downloadPicId=<s:property value="id"/>" target="_self">二维码下载</a>
+										　　<a href="#" onclick="delDoc('<s:property value="id"/>');">删除</a>
 									</td>
 								</tr>
 							</s:iterator>

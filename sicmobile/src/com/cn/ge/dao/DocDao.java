@@ -15,18 +15,22 @@ public interface DocDao {
 	/**
 	 * 翻页查询数据
 	 * @param docname
+	 * @param createdatelow
+	 * @param createdatehigh
 	 * @param start
 	 * @param end
 	 * @return
 	 */
-	public List<DocDto> queryDocByPage(String docname, int start, int end);
+	public List<DocDto> queryDocByPage(String docname, String createdatelow, String createdatehigh, int start, int end);
 	
 	/**
 	 * 查询总记录数
 	 * @param docname
+	 * @param createdatelow
+	 * @param createdatehigh
 	 * @return
 	 */
-	public int queryDocCountByPage(String docname);
+	public int queryDocCountByPage(String docname, String createdatelow, String createdatehigh);
 	
 	/**
 	 * 根据登录ID查询资料信息

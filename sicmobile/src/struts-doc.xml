@@ -27,6 +27,10 @@
 			<result name="success">/page/doc/doclist.jsp</result>
 		</action>
 		
+		<action name="delDocAction" class="docAction" method="delDocAction">
+			<result name="success">/page/doc/doclist.jsp</result>
+		</action>
+		
 		<action name="downloadPic" class="docAction" method="downloadPic">
 		</action>
 		

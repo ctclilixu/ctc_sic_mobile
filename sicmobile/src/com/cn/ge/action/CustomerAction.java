@@ -48,6 +48,8 @@ public class CustomerAction extends BaseAction {
 			queryCompanyname = "";
 			customerList = new ArrayList<CustomerDto>();
 			page = new Page();
+			startIndex = 0;
+			queryData();
 		} catch(Exception e) {
 			log.error("showCustomerManageAction error:" + e);
 			return ERROR;

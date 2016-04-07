@@ -17,7 +17,7 @@
 <body>
 <div id="container">
 	<div class="top">
-		<img src="<%=request.getContextPath()%>/page/web//image/ge.png" />
+		<img src="<%=request.getContextPath()%>/page/web/image/ge.png" />
 	</div>
 	<s:if test="%{docInfoDto.showtype != 2}">
 		<div class="product_code">
@@ -116,6 +116,16 @@
 				</ul>
 			</div>
 		</s:else>
+	</s:if>
+	<s:if test='%{docInfoDto.tableImgs != null && docInfoDto.tableImgs.size() > 0}'>
+		<div class="boxtable">
+			<ul>
+				<s:iterator id="tableImgs" value="docInfoDto.tableImgs" status="st1">
+					<li><img src="<s:property value="docInfoDto.url_pre"/><s:property />" />
+					</li>
+				</s:iterator>
+			</ul>
+		</div>
 	</s:if>
 	<div class="box3">
 		<ul>

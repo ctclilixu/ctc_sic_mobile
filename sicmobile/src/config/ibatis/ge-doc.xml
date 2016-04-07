@@ -52,17 +52,29 @@
 	</resultMap>
 	
 	<select id="queryDocCountByPage" resultClass="int" parameterClass="java.util.Map">
-		select count(*) from tbdoc T where 1 = 1
+		select count(*) from tbdoc T where 1 = 1 and status = 1
 			<isNotEmpty prepend="and" property="docname">
 				T.docname like '%$docname$%' ESCAPE '/'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createdatelow">
+				T.createdate <![CDATA[>=]]> #createdatelow#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createdatehigh">
+				T.createdate <![CDATA[<=]]> #createdatehigh#
 			</isNotEmpty>
 	</select>
 	
 	<select id="queryDocByPage" parameterClass="java.util.Map" resultMap="DocDto">
-		select T.* from tbdoc T where 1 = 1
-		<isNotEmpty prepend="and" property="docname">
-			T.docname like '%$docname$%' ESCAPE '/'
-		</isNotEmpty>
+		select T.* from tbdoc T where 1 = 1 and status = 1
+			<isNotEmpty prepend="and" property="docname">
+				T.docname like '%$docname$%' ESCAPE '/'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createdatelow">
+				T.createdate <![CDATA[>=]]> #createdatelow#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createdatehigh">
+				T.createdate <![CDATA[<=]]> #createdatehigh#
+			</isNotEmpty>
 		order by T.updatedate desc
 		LIMIT #start#, #end#
 	</select>
@@ -73,7 +85,7 @@
 	</select>
 	
 	<select id="queryDocByLogicID" parameterClass="java.util.Map" resultMap="DocDto">
-		select * from tbdoc where docname = #docname# and doctype = #doctype#
+		select * from tbdoc where docname = #docname# and doctype = #doctype# and status = 1
 	</select>
 	
 	<delete id="deleteDoc" parameterClass="java.util.Map">

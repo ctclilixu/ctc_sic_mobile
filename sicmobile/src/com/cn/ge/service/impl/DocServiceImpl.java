@@ -2,6 +2,7 @@ package com.cn.ge.service.impl;
 
 import java.util.List;
 
+import com.cn.common.util.Constants;
 import com.cn.common.util.Page;
 import com.cn.common.util.StringUtil;
 import com.cn.ge.dao.DocDao;
@@ -19,10 +20,16 @@ public class DocServiceImpl implements DocService {
 	private DocDao docDao;
 
 	@Override
-	public Page queryDocByPage(String docname, Page page) {
+	public Page queryDocByPage(String docname, String createdatelow, String createdatehigh, Page page) {
 		docname = StringUtil.replaceDatabaseKeyword_mysql(docname);
+		if(StringUtil.isNotBlank(createdatelow)) {
+			createdatelow = createdatelow + " 00:00:00";
+		}
+		if(StringUtil.isNotBlank(createdatehigh)) {
+			createdatehigh = createdatehigh + " 23:59:59";
+		}
 		//查询总记录数
-		int totalCount = docDao.queryDocCountByPage(docname);
+		int totalCount = docDao.queryDocCountByPage(docname, createdatelow, createdatehigh);
 		page.setTotalCount(totalCount);
 		if(totalCount % page.getPageSize() > 0) {
 			page.setTotalPage(totalCount / page.getPageSize() + 1);
@@ -30,7 +37,7 @@ public class DocServiceImpl implements DocService {
 			page.setTotalPage(totalCount / page.getPageSize());
 		}
 		//翻页查询记录
-		List<DocDto> list = docDao.queryDocByPage(docname,
+		List<DocDto> list = docDao.queryDocByPage(docname, createdatelow, createdatehigh,
 				page.getStartIndex() * page.getPageSize(), page.getPageSize());
 		page.setItems(list);
 		return page;
@@ -47,8 +54,14 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public void deleteDoc(String id) {
-		docDao.deleteDoc(id);
+	public void deleteDoc(String id, String userid) {
+		DocDto doc = docDao.queryDocByID(id);
+		if(doc != null) {
+			//逻辑删除
+			doc.setStatus(Constants.STATUS_DEL);
+			doc.setUpdateuser(userid);
+			docDao.updateDoc(doc);
+		}
 	}
 
 	@Override

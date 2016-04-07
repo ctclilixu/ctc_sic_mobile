@@ -1,5 +1,6 @@
 package com.cn.common.util;
 
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,12 +12,17 @@ import java.util.Map;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.apache.pdfbox.exceptions.InvalidPasswordException;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
+import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDDocumentOutline;
+import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
 import org.apache.pdfbox.util.PDFTextStripper;
+import org.apache.pdfbox.util.PDFTextStripperByArea;
 
 /**
  * PDF文件操作工具类
@@ -323,6 +329,87 @@ public class PdfUtil {
 		result = result.replace("  ", " ");
 		return result;
 	}
+	
+	/**
+	 * PDF纲要
+	 * @param file
+	 */
+	public static void getPDFOutline(String file) {
+		try {
+			// 打开pdf文件流
+			FileInputStream fis = new FileInputStream(file);
+			// 加载 pdf 文档,获取PDDocument文档对象
+			PDDocument document = PDDocument.load(fis);
+			// 获取PDDocumentCatalog文档目录对象
+			PDDocumentCatalog catalog = document.getDocumentCatalog();
+			// 获取PDDocumentOutline文档纲要对象
+			PDDocumentOutline outline = catalog.getDocumentOutline();
+			// 获取第一个纲要条目（标题1）
+			PDOutlineItem item = outline.getFirstChild();
+			if (outline != null) {
+				// 遍历每一个标题1
+				while (item != null) {
+					// 打印标题1的文本
+					System.out.println("Item:" + item.getTitle());
+					// 获取标题1下的第一个子标题（标题2）
+					PDOutlineItem child = item.getFirstChild();
+					// 遍历每一个标题2
+					while (child != null) {
+						// 打印标题2的文本
+						System.out.println("    Child:" + child.getTitle());
+						// 指向下一个标题2
+						child = child.getNextSibling();
+					}
+					// 指向下一个标题1
+					item = item.getNextSibling();
+				}
+			}
+			// 关闭输入流
+			document.close();
+			fis.close();
+		} catch (FileNotFoundException ex) {
+			log.error(ex);
+		} catch (IOException ex) {
+			log.error(ex);
+		}
+	}
+	
+	public static void main1(String[] args) throws Exception {
+//		String pdfFilePath = "D:/yppfff/GEA32118 1700V SiC Module Fact Sheet_R2.pdf";
+//		String pdfFilePath = "D:/yppfff/GEA32119 SiC Power Block Fact Sheet_R3 (1).pdf";
+//		String pdfFilePath = "D:/yppfff/GEA32120 SiC Mosfet GE12N20L Fact Sheet_R2.pdf";
+		String pdfFilePath = "D:/yppfff/GEA32121 SiC Mosfet GE12N45L Fact Sheet_R2.pdf";
+//		String pdfFilePath = "D:/yppfff/GEA32158 1200V SiC Power Module Fact Sheet_R3.pdf";
+		
+//		getPDFOutline(pdfFilePath);
+		
+		PDDocument document = null;
+		try {
+			document = PDDocument.load(pdfFilePath);
+			if (document.isEncrypted()) {
+				try {
+					document.decrypt("");
+				} catch (InvalidPasswordException e) {
+					System.err.println("Error: Document is encrypted with a password.");
+					System.exit(1);
+				}
+			}
+			PDFTextStripperByArea stripper = new PDFTextStripperByArea();
+			stripper.setSortByPosition(true);
+			Rectangle rect = new Rectangle(10, 380, 275, 1360);
+			stripper.addRegion("class1", rect);
+			List allPages = document.getDocumentCatalog().getAllPages();
+			PDPage firstPage = (PDPage) allPages.get(0);
+			stripper.extractRegions(firstPage);
+			System.out.println("Text in the area:" + rect);
+			System.out.println(stripper.getTextForRegion("class1"));
+
+		} finally {
+			if (document != null) {
+				document.close();
+			}
+		}
+	}
 
 	public static void main(String[] args) {
 //		String pdfFilePath = "D:/yppfff/GEA32118 1700V SiC Module Fact Sheet_R2.pdf";
@@ -332,6 +419,7 @@ public class PdfUtil {
 //		String pdfFilePath = "D:/yppfff/GEA32158 1200V SiC Power Module Fact Sheet_R3.pdf";
 		
 		String text = getTextFromPdf(pdfFilePath);
+		log.info(text);
 		String title = "";
 		String subtitle = "";
 		String desc = "";

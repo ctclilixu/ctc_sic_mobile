@@ -174,6 +174,11 @@ public class DocDto extends BaseDto {
 	 * 备用字段1
 	 */
 	private String res01;
+	
+	/**
+	 * 表格图片
+	 */
+	private List<String> tableImgs;
 
 	/**
 	 * 备用字段2
@@ -714,5 +719,22 @@ public class DocDto extends BaseDto {
 
 	public void setDoctype(String doctype) {
 		this.doctype = doctype;
+	}
+
+	public List<String> getTableImgs() {
+		tableImgs = new ArrayList<String>();
+		if(res01 != null && !"".equals(res01)) {
+			String[] list = res01.split(",");
+			for(String img : list) {
+				if(img != null && !"".equals(img)) {
+					tableImgs.add(img);
+				}
+			}
+		}
+		return tableImgs;
+	}
+
+	public void setTableImgs(List<String> tableImgs) {
+		this.tableImgs = tableImgs;
 	}
 }

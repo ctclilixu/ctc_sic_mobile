@@ -16,7 +16,10 @@ import org.apache.log4j.Logger;
 import com.cn.common.action.BaseAction;
 import com.cn.common.qrcode.QRCodeUtil;
 import com.cn.common.util.Constants;
+import com.cn.common.util.FileUtil;
 import com.cn.common.util.Page;
+import com.cn.common.util.PdfKeywordsUtil;
+import com.cn.common.util.PdfToImgUtil;
 import com.cn.common.util.PdfUtil;
 import com.cn.common.util.PropertiesConfig;
 import com.cn.common.util.StringUtil;
@@ -47,7 +50,10 @@ public class DocAction extends BaseAction {
 	 */
 	private Page page;
 	
+	//查询条件
 	private String queryDocname;
+	private String queryCreatedatelow;
+	private String queryCreatedatehigh;
 	
 	private List<DocDto> docList;
 	
@@ -60,6 +66,9 @@ public class DocAction extends BaseAction {
 	
 	//图片下载
 	private String downloadPicId;
+	
+	//删除
+	private String delDocId;
 	
 	/**
 	 * 下载二维码Action
@@ -124,6 +133,12 @@ public class DocAction extends BaseAction {
 				this.addActionMessage("请选择PDF文件！");
 				return "checkerror";
 			}
+			//后缀名
+			String suffixname = filename.substring(filename.lastIndexOf("."), filename.length());
+			if(!".pdf".equalsIgnoreCase(suffixname)) {
+				this.addActionMessage("您选择的不是PDF文件！");
+				return "checkerror";
+			}
 
 			//判断逻辑主键
 			DocDto tmpdoc = docService.queryDocByLogicID(docname, doctype);
@@ -135,25 +150,6 @@ public class DocAction extends BaseAction {
 				}
 				return "checkerror";
 			}
-			
-//			Date date = new Date();
-//			//文件后缀名
-//			String s = filename.substring(filename.lastIndexOf("."), filename.length());
-//			
-//			//新的文件名
-//			SimpleDateFormat sdff = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-//			String random = UUID.randomUUID().toString();
-//			String newfilename = sdff.format(date) + random.substring(random.length() - 5, random.length());
-//			
-//			String oldPath = addPdfFile.getAbsolutePath();
-//			
-//			//目标文件路径
-//			String targetPath = DocAction.class.getResource("/").toString();
-//			targetPath = targetPath.substring(0, targetPath.indexOf("WEB-INF"));
-//			targetPath += "temp/";
-//			targetPath = targetPath.replace("file:/", "/");
-//			//将文件拷贝到指定路径
-//			FileUtil.copyFile(oldPath, targetPath, newfilename + s);
 			
 			//当前操作用户ID
 			String userid = (String) ActionContext.getContext().getSession().get(Constants.SESSION_USER_ID);
@@ -186,9 +182,15 @@ public class DocAction extends BaseAction {
 				subtitle = ss[1].trim();
 			}
 			
+			String firstkeyword = "";
+			String lastkeyword = "";
+			
 			if(text.indexOf("Features") >= 0) {
 				//标准格式
 				newdoc.setShowtype(1);
+				//标准格式的关键字
+				firstkeyword = "ymb";
+				lastkeyword = "ecommended in pulse mode only";
 				
 				String productcode = "";
 				String features = "";
@@ -244,6 +246,9 @@ public class DocAction extends BaseAction {
 			} else {
 				//其他格式
 				newdoc.setShowtype(2);
+				//其他格式的关键字
+				firstkeyword = "las";
+				lastkeyword = "";
 				
 				String lowInductanceModules = "Low-inductance modules  \r\nwith Intelligent Gate Drive";
 				String controlsProtection = "Controls and Protection";
@@ -317,6 +322,12 @@ public class DocAction extends BaseAction {
 			newdoc.setUpdateuser(userid);
 			docService.insertDoc(newdoc);
 			
+			//将PDF文件保存到服务器上
+			String oldPath = addPdfFile.getAbsolutePath();
+			//将文件拷贝到指定路径
+			FileUtil.copyFile(oldPath, PropertiesConfig.getPropertiesValueByKey("PIC_PATH") + "/" + newdoc.getId() + "/", newdoc.getId() + suffixname);
+			
+			
 			//判断文件夹目录是否存在
 			File pic_path = new File(PropertiesConfig.getPropertiesValueByKey("PIC_PATH"));
 			if(!pic_path.exists()) {
@@ -342,6 +353,47 @@ public class DocAction extends BaseAction {
 				if(piclist.size() > 5) {
 					newdoc.setPicture5(piclist.get(4));
 				}
+			}
+			
+			//PDF表格
+			String pdfPath = PropertiesConfig.getPropertiesValueByKey("PIC_PATH") + "/" + newdoc.getId() + "/" + newdoc.getId() + suffixname;
+			
+			
+			
+			//表格起始坐标
+			PdfKeywordsUtil pdfKeywords = new PdfKeywordsUtil();
+			List<float[]> firstPositions = pdfKeywords.getKeyWords(pdfPath, firstkeyword);
+			if(firstPositions != null && firstPositions.size() > 0) {
+				//默认+30
+				int firstheight = (int) firstPositions.get(0)[1] + 30;
+				int firstindex = (int) firstPositions.get(0)[2];
+				log.info("firstheight=" + firstheight);
+				log.info("firstindex=" + firstindex);
+				
+				//表格底部坐标
+				int lastheight = 0;
+				int lastindex = 0;
+				if(newdoc.getShowtype() == 1) {
+					List<float[]> lastPositions = pdfKeywords.getKeyWords(pdfPath, lastkeyword);
+					if(lastPositions != null && lastPositions.size() > 0) {
+						lastheight = (int) lastPositions.get(0)[1];
+						lastindex = (int) lastPositions.get(0)[2];
+					}
+				} else {
+					//其他格式，默认表格高度为440
+					lastheight = firstheight + 440;
+					lastindex = firstindex;
+				}
+				
+				log.info("lastheight=" + lastheight);
+				log.info("lastindex=" + lastindex);
+				
+				PdfToImgUtil util = new PdfToImgUtil();
+				String result = util.tableToImg(pdfPath, PropertiesConfig.getPropertiesValueByKey("PIC_PATH") + "/" + newdoc.getId() + "/",
+						"table", firstindex, firstheight, lastindex, lastheight);
+				log.info("result=" + result);
+				//表格图片
+				newdoc.setRes01(result);
 			}
 			
 			//生成二维码qrcode
@@ -375,6 +427,26 @@ public class DocAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
+	
+	/**
+	 * 逻辑删除文件
+	 * @return
+	 */
+	public String delDocAction() {
+		try {
+			this.clearMessages();
+			//当前操作用户ID
+			String userid = (String) ActionContext.getContext().getSession().get(Constants.SESSION_USER_ID);
+			docService.deleteDoc(delDocId, userid);
+			delDocId = "";
+			this.addActionMessage("删除成功！");
+			queryData();
+		} catch(Exception e) {
+			log.error("showDocManageAction error:" + e);
+			return ERROR;
+		}
+		return SUCCESS;
+	}
 
 	/**
 	 * 资料管理页面
@@ -384,8 +456,13 @@ public class DocAction extends BaseAction {
 		try {
 			this.clearMessages();
 			queryDocname = "";
+			queryCreatedatelow = "";
+			queryCreatedatehigh = "";
 			docList = new ArrayList<DocDto>();
 			page = new Page();
+			startIndex = 0;
+			delDocId = "";
+			queryData();
 		} catch(Exception e) {
 			log.error("showDocManageAction error:" + e);
 			return ERROR;
@@ -436,7 +513,7 @@ public class DocAction extends BaseAction {
 		}
 		//翻页查询所有委托公司
 		this.page.setStartIndex(startIndex);
-		page = docService.queryDocByPage(queryDocname, page);
+		page = docService.queryDocByPage(queryDocname, queryCreatedatelow, queryCreatedatehigh, page);
 		docList = (List<DocDto>) page.getItems();
 		this.setStartIndex(page.getStartIndex());
 	}
@@ -527,5 +604,29 @@ public class DocAction extends BaseAction {
 
 	public void setDoctype(String doctype) {
 		this.doctype = doctype;
+	}
+
+	public String getDelDocId() {
+		return delDocId;
+	}
+
+	public void setDelDocId(String delDocId) {
+		this.delDocId = delDocId;
+	}
+
+	public String getQueryCreatedatelow() {
+		return queryCreatedatelow;
+	}
+
+	public void setQueryCreatedatelow(String queryCreatedatelow) {
+		this.queryCreatedatelow = queryCreatedatelow;
+	}
+
+	public String getQueryCreatedatehigh() {
+		return queryCreatedatehigh;
+	}
+
+	public void setQueryCreatedatehigh(String queryCreatedatehigh) {
+		this.queryCreatedatehigh = queryCreatedatehigh;
 	}
 }

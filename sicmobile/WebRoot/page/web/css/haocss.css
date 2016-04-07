@@ -10,7 +10,7 @@ li{list-style:none;list-style-type:none;}
 .fr{float:right;}
 .none{display:none;}
 .block{display:block;}
-/*处理文本框文字溢出问题，overflow可强制去掉多余部分的代码*/
+/*澶勭悊鏂囨湰妗嗘枃瀛楁孩鍑洪棶棰橈紝overflow鍙己鍒跺幓鎺夊浣欓儴鍒嗙殑浠ｇ爜*/
 .wrap{word-wrap:break-word;overflow:hidden;}
 /*link*/
 a:link{color:#005a98;text-decoration:none}
@@ -22,7 +22,7 @@ a:hover{color:#cf0010;text-decoration:underline}
 #dw1{ background-image: url(qmenu.png); position:relative;left:230px;top:12px;}
 #dw2{ background-image: url(qmenu.png); position:absolute;left:230px;top:12px;}
 
-/*通用元素*/
+/*閫氱敤鍏冪礌*/
 .mgl30{margin-left:30px;}
 .mgr0{margin-right:0px;}
 .mgt30{margin-top:30px;}
@@ -68,6 +68,13 @@ body{background:;}
 
 .box3 ul li img{float:left;}
 
+.boxtable{width:100%;float:left;padding-left:20px;margin-bottom:30px;padding-top:20px;}
+.boxtable ul li{float:left; height:auto;width:90%;margin-right:10px;}
+
+.boxtable ul li img{float:left;width:100%;}
+
+
+
 
 .box4{width:80%;height:60px;margin-left:60px;-webkit-appearance: none;background:#0383C0;border:2px solid #045A83;float:left;text-align:center;-webkit-border-radius: 5px;
 -moz-border-radius: 5px;
@@ -78,6 +85,6 @@ color:#FFFFFF;}
 
 .box4 a:visited{color:#FFFFFF;}
 
-<!--结束index-->
+<!--缁撴潫index-->
 
 	

@@ -17,9 +17,11 @@ import com.cn.ge.dto.DocDto;
 public class DocDaoImpl extends BaseDao implements DocDao {
 
 	@Override
-	public List<DocDto> queryDocByPage(String docname, int start, int end) {
+	public List<DocDto> queryDocByPage(String docname, String createdatelow, String createdatehigh, int start, int end) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("docname", docname);
+		paramMap.put("createdatelow", createdatelow);
+		paramMap.put("createdatehigh", createdatehigh);
 		paramMap.put("start", start);
 		paramMap.put("end", end);
 		@SuppressWarnings("unchecked")
@@ -28,9 +30,11 @@ public class DocDaoImpl extends BaseDao implements DocDao {
 	}
 
 	@Override
-	public int queryDocCountByPage(String docname) {
+	public int queryDocCountByPage(String docname, String createdatelow, String createdatehigh) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("docname", docname);
+		paramMap.put("createdatelow", createdatelow);
+		paramMap.put("createdatehigh", createdatehigh);
 		return (Integer) getSqlMapClientTemplate().queryForObject("queryDocCountByPage", paramMap);
 	}
 
