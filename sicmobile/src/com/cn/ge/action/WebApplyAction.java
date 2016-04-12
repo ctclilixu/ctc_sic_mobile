@@ -103,8 +103,9 @@ public class WebApplyAction extends BaseAction {
 			}
 			
 			//发送邮件
-			final String subject = addCustomerDto.getCustomername() + "申请查看“" + addCustomerDto.getDocname() + "”详细资料。";
-			final String body = addCustomerDto.getCustomername() + "申请查看“" + addCustomerDto.getDocname() + "”详细资料。"
+//			final String subject = addCustomerDto.getCustomername() + "申请查看“" + addCustomerDto.getDocname() + "”详细资料。";
+			final String subject = "详细资料申请【" + addCustomerDto.getCustomername() + "】";
+			final String body = "该客户查阅" + addCustomerDto.getDocname() + "的概要版，现需申请" + addCustomerDto.getDocname() + "的详细资料。"
 					+ "</br>客户名：" + addCustomerDto.getCustomername()
 					+ "</br>公司名：" + addCustomerDto.getCompanyname()
 					+ "</br>手机号码：" + addCustomerDto.getPhone()
