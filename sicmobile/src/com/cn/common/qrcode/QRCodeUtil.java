@@ -272,7 +272,7 @@ public class QRCodeUtil {
 		try {
 			String imgType = "bmp";
 			String imgPath = "d://tttt." + imgType;
-			String encoderContent = "http://www.shdsyg.cn/dsyg/";
+			String encoderContent = "http://www.baidu.com";
 			String iconPath = "D://1.png";
 			QRCodeUtil qr = new QRCodeUtil();
 			//生成二维码

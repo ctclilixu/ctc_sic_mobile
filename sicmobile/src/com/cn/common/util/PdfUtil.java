@@ -1,6 +1,9 @@
 package com.cn.common.util;
 
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -47,6 +52,7 @@ public class PdfUtil {
 	 */
 	public static List<String> getPicFromPdf(File file, String id, String outPath) {
 		List<String> result = new ArrayList<String>();
+		List<String> tmpresult = new ArrayList<String>();
 		FileInputStream is = null;
 		PDDocument document = null;
 		try {
@@ -76,11 +82,27 @@ public class PdfUtil {
 						PDXObjectImage image = (PDXObjectImage) images.get(key);
 						//文件名
 						String name = id + "_" + i;
-						result.add(name + "." + image.getSuffix());
+						tmpresult.add(name + "." + image.getSuffix());
 						//将图片输出到指定路径
 						image.write2file(outPath + name);
 						i++;
 					}
+				}
+			}
+			//对失真图片转化
+			if(tmpresult != null && tmpresult.size() > 0) {
+				Image img = null;
+				String finalname = "";
+				File tmpfile = null;
+				for(String name : tmpresult) {
+					finalname = "final" + name;
+					img = Toolkit.getDefaultToolkit().getImage(outPath + name);
+					BufferedImage bi_scale = Img2BufferImg.toBufferedImage(img);
+					ImageIO.write(bi_scale, "jpg", new File(outPath + finalname));
+					result.add(finalname);
+					//删掉原图
+					tmpfile = new File(outPath + name);
+					tmpfile.delete();
 				}
 			}
 		} catch (FileNotFoundException e) {
@@ -413,101 +435,103 @@ public class PdfUtil {
 
 	public static void main(String[] args) {
 //		String pdfFilePath = "D:/yppfff/GEA32118 1700V SiC Module Fact Sheet_R2.pdf";
-//		String pdfFilePath = "D:/yppfff/GEA32119 SiC Power Block Fact Sheet_R3 (1).pdf";
+		String pdfFilePath = "D:/yppfff/GEA32119 SiC Power Block Fact Sheet_R3 (1).pdf";
 //		String pdfFilePath = "D:/yppfff/GEA32120 SiC Mosfet GE12N20L Fact Sheet_R2.pdf";
-		String pdfFilePath = "D:/yppfff/GEA32121 SiC Mosfet GE12N45L Fact Sheet_R2.pdf";
+//		String pdfFilePath = "D:/yppfff/GEA32121 SiC Mosfet GE12N45L Fact Sheet_R2.pdf";
 //		String pdfFilePath = "D:/yppfff/GEA32158 1200V SiC Power Module Fact Sheet_R3.pdf";
 		
-		String text = getTextFromPdf(pdfFilePath);
-		log.info(text);
-		String title = "";
-		String subtitle = "";
-		String desc = "";
+		System.out.println(getPicFromPdf(new File(pdfFilePath), "1", "D:/yppfff/"));
 		
-		//本地测试用
-		PdfUtil.linefeed = "\r\n";
-		
-		//第一行数据为资料标题
-		String s1[] = text.split(PdfUtil.linefeed);
-		title = s1[0];
-		//副标题
-		if(text.indexOf("fact sheet") >= 0) {
-			String s[] = text.split("fact sheet");
-			String ss[] = s[1].split(PdfUtil.linefeed);
-			subtitle = ss[1].trim();
-		}
-		
-		if(text.indexOf("Features") >= 0) {
-			String productcode = "";
-			String features = "";
-			String benefits = "";
-			String applications = "";
-			
-			//文件描述
-			for(int i = 1; i < s1.length; i++) {
-				if("Features".equals(s1[i])) {
-					break;
-				}
-				desc += s1[i] + " ";
-			}
-			desc = desc.replace("  ", " ");
-			
-			//Product Code
-			if(text.indexOf("Product Code") >= 0) {
-				String s[] = text.split("Product Code");
-				String ss[] = s[1].split(PdfUtil.linefeed);
-				productcode = ss[0].trim();
-			}
-			
-			//Features
-			features = PdfUtil.getContentByKeyword(text, "Features", true);
-			log.info("features=[" + features + "]");
-			//Benefits
-			benefits = PdfUtil.getContentByKeyword(text, "Benefits", true);
-			//Applications
-			applications = PdfUtil.getContentByKeyword(text, "Applications", false);
-			
-			log.info("productcode=[" + productcode + "]");
-			log.info("features=[" + features + "]");
-			log.info("benefits=[" + benefits + "]");
-			log.info("applications=[" + applications + "]");
-		} else {
-			String lowInductanceModules = "Low-inductance modules  \r\nwith Intelligent Gate Drive";
-			String controlsProtection = "Controls and Protection";
-			String sicUserInterface = "SiC User Interface ";
-			String powerCapabilityEfficiency = "Power Capability and Efficiency";
-			//文件描述
-			String tmp = text.replace(subtitle, "");
-			tmp = tmp.replace("fact sheet", "");
-			tmp = tmp.replace(PdfUtil.linefeed + PdfUtil.linefeed, PdfUtil.linefeed);
-			tmp = tmp.replace(PdfUtil.linefeed + PdfUtil.linefeed, PdfUtil.linefeed);
-			String s2[] = tmp.split(PdfUtil.linefeed);
-			//文件描述
-			for(int i = 1; i < s2.length; i++) {
-				if("Low-inductance modules".equals(s2[i].trim())) {
-					break;
-				}
-				desc += s2[i] + " ";
-			}
-			desc = desc.replace("  ", " ");
-			
-			//Low-inductance modules
-			//with Intelligent Gate Drive
-			lowInductanceModules = PdfUtil.getContentByIndex(text, "Low-inductance modules  \r\nwith Intelligent Gate Drive", "Controls and Protection");
-			//Controls and Protection
-			controlsProtection = PdfUtil.getContentByIndex(text, "Controls and Protection", "SiC User Interface");
-			//SiC User Interface
-			sicUserInterface = PdfUtil.getContentByIndex(text, "SiC User Interface ", "fact sheet");
-			//Power Capability and Efficiency
-			powerCapabilityEfficiency = PdfUtil.getContentByIndex(text, "Power Capability and Efficiency", "www.GESiliconCarbide.com");
-			
-			log.info("lowInductanceModules=[" + lowInductanceModules + "]");
-			log.info("controlsProtection=[" + controlsProtection + "]");
-			log.info("sicUserInterface=[" + sicUserInterface + "]");
-			log.info("powerCapabilityEfficiency=[" + powerCapabilityEfficiency + "]");
-		}
-		log.info("desc=[" + desc + "]");
-		log.info("title=[" + title + "]");
-		log.info("subtitle=[" + subtitle + "]");
+//		String text = getTextFromPdf(pdfFilePath);
+//		log.info(text);
+//		String title = "";
+//		String subtitle = "";
+//		String desc = "";
+//		
+//		//本地测试用
+//		PdfUtil.linefeed = "\r\n";
+//		
+//		//第一行数据为资料标题
+//		String s1[] = text.split(PdfUtil.linefeed);
+//		title = s1[0];
+//		//副标题
+//		if(text.indexOf("fact sheet") >= 0) {
+//			String s[] = text.split("fact sheet");
+//			String ss[] = s[1].split(PdfUtil.linefeed);
+//			subtitle = ss[1].trim();
+//		}
+//		
+//		if(text.indexOf("Features") >= 0) {
+//			String productcode = "";
+//			String features = "";
+//			String benefits = "";
+//			String applications = "";
+//			
+//			//文件描述
+//			for(int i = 1; i < s1.length; i++) {
+//				if("Features".equals(s1[i])) {
+//					break;
+//				}
+//				desc += s1[i] + " ";
+//			}
+//			desc = desc.replace("  ", " ");
+//			
+//			//Product Code
+//			if(text.indexOf("Product Code") >= 0) {
+//				String s[] = text.split("Product Code");
+//				String ss[] = s[1].split(PdfUtil.linefeed);
+//				productcode = ss[0].trim();
+//			}
+//			
+//			//Features
+//			features = PdfUtil.getContentByKeyword(text, "Features", true);
+//			log.info("features=[" + features + "]");
+//			//Benefits
+//			benefits = PdfUtil.getContentByKeyword(text, "Benefits", true);
+//			//Applications
+//			applications = PdfUtil.getContentByKeyword(text, "Applications", false);
+//			
+//			log.info("productcode=[" + productcode + "]");
+//			log.info("features=[" + features + "]");
+//			log.info("benefits=[" + benefits + "]");
+//			log.info("applications=[" + applications + "]");
+//		} else {
+//			String lowInductanceModules = "Low-inductance modules  \r\nwith Intelligent Gate Drive";
+//			String controlsProtection = "Controls and Protection";
+//			String sicUserInterface = "SiC User Interface ";
+//			String powerCapabilityEfficiency = "Power Capability and Efficiency";
+//			//文件描述
+//			String tmp = text.replace(subtitle, "");
+//			tmp = tmp.replace("fact sheet", "");
+//			tmp = tmp.replace(PdfUtil.linefeed + PdfUtil.linefeed, PdfUtil.linefeed);
+//			tmp = tmp.replace(PdfUtil.linefeed + PdfUtil.linefeed, PdfUtil.linefeed);
+//			String s2[] = tmp.split(PdfUtil.linefeed);
+//			//文件描述
+//			for(int i = 1; i < s2.length; i++) {
+//				if("Low-inductance modules".equals(s2[i].trim())) {
+//					break;
+//				}
+//				desc += s2[i] + " ";
+//			}
+//			desc = desc.replace("  ", " ");
+//			
+//			//Low-inductance modules
+//			//with Intelligent Gate Drive
+//			lowInductanceModules = PdfUtil.getContentByIndex(text, "Low-inductance modules  \r\nwith Intelligent Gate Drive", "Controls and Protection");
+//			//Controls and Protection
+//			controlsProtection = PdfUtil.getContentByIndex(text, "Controls and Protection", "SiC User Interface");
+//			//SiC User Interface
+//			sicUserInterface = PdfUtil.getContentByIndex(text, "SiC User Interface ", "fact sheet");
+//			//Power Capability and Efficiency
+//			powerCapabilityEfficiency = PdfUtil.getContentByIndex(text, "Power Capability and Efficiency", "www.GESiliconCarbide.com");
+//			
+//			log.info("lowInductanceModules=[" + lowInductanceModules + "]");
+//			log.info("controlsProtection=[" + controlsProtection + "]");
+//			log.info("sicUserInterface=[" + sicUserInterface + "]");
+//			log.info("powerCapabilityEfficiency=[" + powerCapabilityEfficiency + "]");
+//		}
+//		log.info("desc=[" + desc + "]");
+//		log.info("title=[" + title + "]");
+//		log.info("subtitle=[" + subtitle + "]");
 	}
 }
